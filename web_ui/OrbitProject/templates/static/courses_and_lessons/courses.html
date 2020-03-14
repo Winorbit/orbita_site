@@ -1,0 +1,31 @@
+{% extends 'static/base.html' %}
+{% load static %}
+{% block title %}
+Курсы  
+
+{% endblock %}
+
+{% block content %}
+
+       
+<div class="container mt-5">
+
+<div class="row">
+
+ {% for course in courses %}
+<div class="col-md-4">
+
+  <div class="card border success">
+    <img class="card-img-top" src="{% if place.icon %}{{ place.icon.url }}{% else %}{% static "img/no-image.jpg"%}{% endif %}" alt="Card image cap" style="height: 280px;">
+    <div class="card-body">
+      <h4 class="card-title"><a href="/courses/{{course.id}}" class="font-weight-bold">{{course.title}}</a></h4>
+      <p class="card-text">Описание  курса {{course.escription}}</p>
+    </div>
+  </div>
+  </div>
+
+{%endfor%}
+
+ </div> 
+</div>
+ {% endblock %}

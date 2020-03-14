@@ -1,0 +1,33 @@
+{% extends 'static/base.html' %}
+{% load static %}
+{% block title %}
+|Ваш заказ
+{% endblock %}
+
+{% block content %}
+
+ <form action="" method="post">
+ 	{% csrf_token %}
+ 	   {% if course_data.course.id not in request.session.user_courses %}
+
+  		<input type="hidden" name="submit" value="{{course_data.course.id}}"> 
+ 		<button type="submit">Присоедениться к курсу</button>
+ 		  {%else%}
+
+ 		  <input type="hidden" name="leave" value="{{course_data.course.id}}"> 
+ 		  <button type="submit">Отписаться от курса</button>
+ 		  {% endif %}
+</form>
+
+{%for course_lesson in course_data.lessons %}
+<ul>
+	<li>  <a href="{%url 'OrbitProject:course_lesson' course_data.course.id course_lesson.id%}">{{course_lesson.title}}</a>  </li>
+	
+
+</ul>
+{%endfor%}
+
+
+
+    
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'static/base.html' %}
+{% load static %}
+{% block title %}
+Занятие  {{lesson_data.title}}
+{% endblock %}
+
+
+{% block content %}
+           <div class="container mt-5">
+
+    {% for post in posts %}
+
+
+<div class="card">
+  <h5 class="card-header">Featured</h5>
+  <div class="card-body">
+    <h4 class="card-title"><a href="/blog/{{post.id}}" class="font-weight-bold">{{post.title}}</a></h4>
+    <p class="card-text">Короткое описание поста</p>
+    <a href="/posts/{{post.title}}" class="btn btn-primary">Читать</a>
+  </div>
+</div>
+
+
+     {% endfor %}
+     </div>
+{% endblock %}
