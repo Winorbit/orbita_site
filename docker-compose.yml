@@ -19,7 +19,7 @@ services:
             - 8001:8001
         command: gunicorn --reload -w 4  -b 31.131.28.206:8001 --env DJANGO_SETTINGS_MODULE=Orbit.settings Orbit.wsgi
         volumes:
-            - static_volume:/home/egor/Projects/winterorbite/orbita_site/web_ui
+            - static_volume:/home/orbita/orbit_deploy/orbita_site/web_ui
 
         depends_on:
             - webapi
@@ -28,7 +28,7 @@ services:
     nginx:
         build: ./nginx
         volumes:
-            - static_volume:/home/egor/Projects/winterorbite/orbita_site/web_ui
+            - static_volume:/home/orbita/orbit_deploy/orbita_site/web_ui
         ports:
             - 1337:81
         depends_on:
