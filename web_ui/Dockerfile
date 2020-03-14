@@ -14,4 +14,3 @@ COPY . /code/
 
 EXPOSE 8001
 
-#CMD gunicorn --reload -w 4  -b 0.0.0.0:8000 --env DJANGO_SETTINGS_MODULE=Orbit.settings Orbit.wsgi

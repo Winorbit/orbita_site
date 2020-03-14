@@ -14,4 +14,3 @@ COPY . /code/
 
 EXPOSE 8001
 
-#CMD gunicorn --reload -w 4  -b 0.0.0.0:8001 --env DJANGO_SETTINGS_MODULE=content.settings content.wsgi

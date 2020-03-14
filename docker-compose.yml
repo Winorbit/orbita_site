@@ -9,7 +9,7 @@ services:
         ports:
             - 8000:8000
             - 5432:5432
-        command: gunicorn --reload -w 4  -b 0.0.0.0:8000 --env DJANGO_SETTINGS_MODULE=content.settings content.wsgi
+        command: gunicorn --reload -w 4  -b 31.131.28.206:8000 --env DJANGO_SETTINGS_MODULE=content.settings content.wsgi
         network_mode: host
 
     web-ui:
@@ -17,7 +17,7 @@ services:
         build: ./web_ui
         ports:
             - 8001:8001
-        command: gunicorn --reload -w 4  -b 0.0.0.0:8001 --env DJANGO_SETTINGS_MODULE=Orbit.settings Orbit.wsgi
+        command: gunicorn --reload -w 4  -b 31.131.28.206:8001 --env DJANGO_SETTINGS_MODULE=Orbit.settings Orbit.wsgi
         volumes:
             - static_volume:/home/egor/Projects/winterorbite/orbita_site/web_ui
 
