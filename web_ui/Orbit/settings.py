@@ -14,7 +14,7 @@ SECRET_KEY = 'ozjvkcp2(tg)bzgahcuq^xm+5f&0j-e9$5uwc+$zmm$%t-8d!+'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','0.0.0.0',"webapi","orbita_content"]
+ALLOWED_HOSTS = ['127.0.0.1','0.0.0.0',"31.131.28.206"]
 
 # Application definition
 
