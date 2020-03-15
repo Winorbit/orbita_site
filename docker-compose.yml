@@ -7,17 +7,17 @@ services:
         image: web_api
 
         ports:
-            - 8000:8000
+            - 8010:8010
             - 5432:5432
-        command: gunicorn --reload -w 4  -b :8000 --env DJANGO_SETTINGS_MODULE=content.settings content.wsgi
+        command: gunicorn --reload -w 4  -b :8010 --env DJANGO_SETTINGS_MODULE=content.settings content.wsgi
         network_mode: host
 
     web-ui:
         image: web_ui
         build: ./web_ui
         ports:
-            - 8001:8001
-        command: gunicorn --reload -w 4  -b :8001 --env DJANGO_SETTINGS_MODULE=Orbit.settings Orbit.wsgi
+            - 8011:8011
+        command: gunicorn --reload -w 4  -b :8011 --env DJANGO_SETTINGS_MODULE=Orbit.settings Orbit.wsgi
         volumes:
             - static_volume:/home/orbita/orbit_deploy/orbita_site/web_ui
 
@@ -31,7 +31,7 @@ services:
         volumes:
             - static_volume:/home/orbita/orbit_deploy/orbita_site/web_ui
         ports:
-            - 1337:81
+            - 1337:82
         depends_on:
         - web-ui
         network_mode: host
