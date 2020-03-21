@@ -1,19 +1,20 @@
 version: '3'
 services:
     webapi:
-        
         # container_name: webapi
         build: ./web_api
         image: web_api
+        restart: always
 
         ports:
             - 8010:8010
-            - 5432:5432
+            # - 5432:5432
         command: gunicorn --reload -w 4  -b :8010 --env DJANGO_SETTINGS_MODULE=content.settings content.wsgi
         network_mode: host
 
     web-ui:
         image: web_ui
+        restart: always
         build: ./web_ui
         ports:
             - 8011:8011
