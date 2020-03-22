@@ -1,41 +1,39 @@
 version: '3'
 services:
     webapi:
-        # container_name: webapi
         build: ./web_api
         image: web_api
         restart: always
 
         ports:
             - 8010:8010
-            # - 5432:5432
         command: gunicorn --reload -w 4  -b :8010 --env DJANGO_SETTINGS_MODULE=content.settings content.wsgi
-        network_mode: host
 
     web-ui:
         image: web_ui
-        restart: always
         build: ./web_ui
+        restart: always
         ports:
             - 8011:8011
+        links:
+            - "webapi:webapi"
         command: gunicorn --reload -w 4  -b :8011 --env DJANGO_SETTINGS_MODULE=Orbit.settings Orbit.wsgi
         volumes:
             - static_volume:/home/orbita/orbit_deploy/orbita_site/web_ui
-
         depends_on:
             - webapi
-        network_mode: host
 
     nginx:
         build: ./nginx
         restart: always
+        links:
+            - "web-ui:web-ui"
         volumes:
             - static_volume:/home/orbita/orbit_deploy/orbita_site/web_ui
         ports:
-            - 1337:82
+            - 1338:81
         depends_on:
         - web-ui
-        network_mode: host
 
 volumes:
   static_volume:

@@ -1,4 +1,4 @@
-HOST = "http://127.0.0.1"
+HOST = "http://webapi"
 PORT = "8010"
 
 # ENDPOINTS CONTENT ADRESSES

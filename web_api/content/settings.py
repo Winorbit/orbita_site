@@ -8,7 +8,7 @@ SECRET_KEY = 'tob9j%nc_2=!*)*h2==&gt7%y%wjvq+h6g%l4@)fp2a@qd_=u*'
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','0.0.0.0',"31.131.28.206"]
+ALLOWED_HOSTS = ['127.0.0.1','0.0.0.0',"31.131.28.206", "webapi", "web-ui"]
 
 remoted_db = {'ENGINE': 'django.db.backends.postgresql_psycopg2',
              'NAME': 'orbit_test_db',
