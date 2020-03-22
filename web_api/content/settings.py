@@ -10,6 +10,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1','0.0.0.0',"31.131.28.206"]
 
+ALLOWED_HOSTS = ["*"]
+
+
 remoted_db = {'ENGINE': 'django.db.backends.postgresql_psycopg2',
              'NAME': 'orbit_test_db',
              'USER' : 'orbit_test_user',

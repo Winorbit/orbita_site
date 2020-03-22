@@ -27,11 +27,6 @@ def enter(request):
     pass
 
 def index(request):
-    # response = requests.get('http://0.0.0.0:8000/')
-    # response = requests.get('http://0.0.0.0:8000')
-    # response = requests.get('http://webapi:8000/lessons',verify=False)
-
-
     return render(request, template_adresses.INDEX_PAGE)
     pass
 

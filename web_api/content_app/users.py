@@ -17,9 +17,22 @@ from content_app.serializers import CourseSerializer, LessonSerializer, PostSeri
 
 import json
 
+
+def get_Host_name_IP(): 
+    try: 
+        host_name = socket.gethostname() 
+        host_ip = socket.gethostbyname(host_name) 
+        print("Hostname :  ",host_name) 
+        print("IP : ",host_ip) 
+    except: 
+        print("Unable to get Hostname and IP") 
+  
+
+
 class UserList(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    get_Host_name_IP()
 
     def create(self, validated_data):
         serializer = UserSerializer(data=validated_data)
