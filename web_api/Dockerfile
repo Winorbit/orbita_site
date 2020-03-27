@@ -12,5 +12,5 @@ RUN pipenv install --system
 # Copy project
 COPY . /code/
 
-EXPOSE 8000
+EXPOSE 8010
 
