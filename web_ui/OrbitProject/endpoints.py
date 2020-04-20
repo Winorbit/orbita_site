@@ -1,5 +1,5 @@
-HOST = "http://webapi"
-PORT = "8000"
+HOST = "http://web-api"
+PORT = "${PORT_API}"
 
 # ENDPOINTS CONTENT ADRESSES
 

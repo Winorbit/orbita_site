@@ -1,43 +1,34 @@
 version: '3'
 services:
-    webapi:
-        # container_name: webapi
+    web-api:
+        container_name: web-api
         build: ./web_api
-        image: web_api
         restart: always
-
-        ports:
-            - 8000:8000
-            # - 5432:5432
-        command: gunicorn --reload -w 4  -b :8000 --env DJANGO_SETTINGS_MODULE=content.settings content.wsgi
+        expose:
+            - ${PORT_API}
+        command: gunicorn --reload -w 4  -b :${PORT_API} --env DJANGO_SETTINGS_MODULE=content.settings content.wsgi
+        volumes:
+            - ./web_api/:/home/orbita_site/web_api
 
     web-ui:
-        image: web_ui
+        container_name: web-ui
         build: ./web_ui
         restart: always
-        ports:
-            - 8001:8001
-        links:
-            - "webapi:webapi"
-        command: gunicorn --reload -w 4  -b :8001 --env DJANGO_SETTINGS_MODULE=Orbit.settings Orbit.wsgi
+        expose:
+            - ${PORT_UI}
+        command: gunicorn --reload -w 4  -b :${PORT_UI} --env DJANGO_SETTINGS_MODULE=Orbit.settings Orbit.wsgi
         volumes:
-
-            - static_volume:/home/orbita/orbit_deploy/orbita_site/web_ui
-
+            - ./web_ui/:/home/orbita_site/web_ui
         depends_on:
-            - webapi
+            - web-api
 
     nginx:
-        build: ./nginx
+        container_name: nginx
+        image: nginx:alpine
         restart: always
-        links:
-            - "web-ui:web-ui"
         volumes:
-            - static_volume:/home/orbita/orbit_deploy/orbita_site/web_ui
+            - ./nginx/:/etc/nginx/conf.d/
         ports:
-            - 1337:80
+            - ${PORT_NGINX}:80
         depends_on:
-        - web-ui
-
-volumes:
-  static_volume:
+            - web-ui
