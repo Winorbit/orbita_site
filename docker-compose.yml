@@ -1,7 +1,6 @@
 version: '3.4'
 services:
     web-api:
-        container_name: web-api
         build: ./web_api
         restart: always
         expose:
@@ -11,7 +10,6 @@ services:
             - ./web_api/:/home/orbita_site/web_api
 
     web-ui:
-        container_name: web-ui
         build: ./web_ui
         restart: always
         expose:
@@ -26,7 +24,6 @@ services:
 
     nginx:
         image: nginx:alpine
-        container_name: nginx
         restart: always
         volumes: 
             - ./nginx/nginx.conf.template:/nginx.conf.template
