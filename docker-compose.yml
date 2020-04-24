@@ -25,11 +25,12 @@ services:
             - web-api
 
     nginx:
-        container_name: nginx
         image: nginx:alpine
+        container_name: nginx
         restart: always
         volumes: 
             - ./nginx/nginx.conf.template:/nginx.conf.template
+            - ./nginx/logs/:/var/log/nginx
         ports:
             - ${PORT_NGINX}:80
         environment: 
