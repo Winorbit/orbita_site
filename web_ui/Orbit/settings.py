@@ -109,5 +109,49 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = [
+    STATIC_DIR,
+]
+
+# STATIC_URL = '/static/'
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+LOGGING = {
+  'version': 1,
+  'disable_existing_loggers': False,
+  'formatters': {
+      'simple': {
+            'format': 'velname)s %(message)s'
+        },
+  },
+  'handlers': {
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+        'logstash': {
+            'level': 'INFO',
+            'class': 'logstash.TCPLogstashHandler',
+            'host': 'logstash',
+            'port': 5000, 
+            'version': 1,
+            'message_type': 'django',  # 'type' поле для logstash сообщения.
+            'fqdn': False,
+            'tags': ['django'], # список тег.
+        },
+  },
+  'loggers': {
+        'django.request': {
+            'handlers': ['logstash'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+
+    }
+}

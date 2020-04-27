@@ -1,5 +1,6 @@
 upstream hello_django {
-    server web-ui:8001;}
+    server web-ui:${PORT_UI};
+}
 
 server {
     listen 80;

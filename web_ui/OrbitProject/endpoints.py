@@ -1,5 +1,7 @@
-HOST = "http://webapi"
-PORT = "8000"
+import os
+PORT_API = os.environ.get('PORT_API')
+HOST = "http://web-api"
+PORT = PORT_API
 
 # ENDPOINTS CONTENT ADRESSES
 
