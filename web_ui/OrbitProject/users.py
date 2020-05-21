@@ -29,25 +29,16 @@ def enter(request):
 def index(request):
     return render(request, template_adresses.INDEX_PAGE)
     pass
-
+    
+# 12_gor_mor
 def signup(request):
     if request.method == 'POST':
         form = SignUpForm(data=request.POST)
         if form.is_valid():
+            req = requests.post("http://127.0.0.1:8000/users/", data=form.cleaned_data)
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", req)
 
-
-            user_name = form.cleaned_data.get('username')
-            user_pass = form.cleaned_data.get('password1')
-            user_mail = form.cleaned_data.get('email')
-
-            data = {'username': user_name, "password":user_pass, "email":user_mail}
-            print(endpoints.CREATE_NEW_USER_ENDPOINT)
-
-
-            req = requests.post(endpoints.CREATE_NEW_USER_ENDPOINT, data=data)
-
-
-            if req.status_code == 202:
+            if req.status_code == 201:
                 return HttpResponseRedirect("/my_cabinet")
             else:
                 print(req.status_code)

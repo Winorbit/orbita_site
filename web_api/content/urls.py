@@ -17,6 +17,8 @@ router.register(r'lessons', courses.LessonsList)
 router.register(r'courses', courses.CoursesList)
 router.register(r'posts', posts.PostsList)
 router.register(r'users', users.UserList)
+router.register(r'users_profiles', users.UserProfileClass)
+
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -32,7 +34,7 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-   re_path(r'^users_profile/(?P<user_id>[0-9]+)/$', users.UserProfileClass.as_view()),
+   # re_path(r'^users_profile/(?P<user_id>[0-9]+)/$', users.UserProfileClass.as_view()),
    path('remove_user_course', users.remove_user_course),
 
    re_path(r'^course/(?P<course_id>[-\w]+)/$', courses.course), 
