@@ -14,6 +14,7 @@ class User:
     username: str
     user_id: str
 
+
 def get_user_from_request(request):
     username = request.session.get("username")
     user_id = request.session.get("user_id")
@@ -24,30 +25,36 @@ def get_user_from_request(request):
     return user
     pass
 
+
 def send_to_content(endpoint:str, data:dict):
-    try: 
+    try:
         req = requests.post(endpoint, data=data)
     except Exception as e:
         raise(e)
     return req
     pass
 
+
 def check_user_exist(request):
     user = get_user_from_request(request)
     if user:
         user_data={"username": user.username,  "user_id": user.user_id}
-        res = send_to_content(endpoints.CHECK_USER_PROFILE_ENDPOINT, user_data)
+        res = send_to_content(endpoints.CHECK_USER_ENDPOINT, user_data)
         if res.status_code == 202:
             return True
     else:
         return False
         pass
 
+
 def check_user_profile_exist(request):
     user = get_user_from_request(request)
+    print('***user_check', user)
     if user:
         user_data = {"username": user.username,  "user_id": user.user_id}
         res = send_to_content(endpoints.CHECK_USER_PROFILE_ENDPOINT, user_data)
+        print('***user_data', user_data)
+        print('***res', res)
         if res.status_code == 202:
             return True
     else:
@@ -64,22 +71,21 @@ def check_user_profile_exist(request):
 #         return False
 #         pass
 
-
-
-
-
-
 def check_user_email_is_free():
     pass
+
 
 def check_username_is_free():
     pass
 
+
 def get_user_profile():
     pass
 
+
 def get_user():
     pass
+
 
 def redirect_to_main():
     return HttpResponseRedirect("/")
@@ -95,17 +101,16 @@ def redirect_to_main():
 #         pass
 
 
-
 def write_into_session(request, **kwargs):
+    print('***kwargs', kwargs)
     user_name = kwargs.get('username')
-    user_id = kwargs.get('user_id')
+    userprofile_id = kwargs.get('id')
     user_courses = kwargs.get('user_courses')
 
     request.session["username"] = user_name
-    request.session["user_id"] = user_id
+    request.session["userprofile_id"] = userprofile_id
     request.session["user_courses"] = user_courses
     request.session.modified = True
-
 
 # get_user_profile
 # get_user

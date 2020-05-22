@@ -35,6 +35,7 @@ schema_view = get_schema_view(
 
 urlpatterns = [
    # re_path(r'^users_profile/(?P<user_id>[0-9]+)/$', users.UserProfileClass.as_view()),
+   path('search_user', users.search_user),
    path('remove_user_course', users.remove_user_course),
 
    re_path(r'^course/(?P<course_id>[-\w]+)/$', courses.course), 

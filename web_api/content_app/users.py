@@ -36,8 +36,19 @@ class UserList(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
+@api_view(['POST'])
+def search_user(request):
+    user_name = request.data.get("username")
+    password = request.data.get("password")
 
-
+    if User.objects.filter(password=password, username=user_name).exists():
+        user = User.objects.get(password=password, username=user_name)
+        user_profile = UserProfile.objects.get(user=user)
+        print('***user_profile', user_profile)  # UserProfile object (9)
+        print('***user', user)                  # egor41
+        data = {**UserSerializer(user).data, **UserProfileSerializer(user_profile).data}
+        print('***data', data)
+        return Response(data, status=status.HTTP_200_OK)
 
 
 class UserProfileClass(viewsets.ModelViewSet):
@@ -45,27 +56,27 @@ class UserProfileClass(viewsets.ModelViewSet):
     serializer_class = UserProfileSerializer
 
 
-
 def search_user_profile(**kwargs):
     # ВОТ ТУТ ЧЕКНУТЬ ПРАВИЛЬНУЮ ПРОВЕРКУ АРГУМЕНТОВ
-    # print(kwargs)
-    if kwargs.get("username") and kwargs.get("password"):
-        test_user_data = {"username":kwargs.get("username")[0], "password":kwargs.get("password")[0]}
-        # print(test_user_data)
+    print('***kwargs', kwargs)
+    if kwargs.get("username") and kwargs.get("user_id"):
+        test_user_data = {"username":kwargs.get("username")[0], "user_id":kwargs.get("user_id")[0]}
+        print('***test_user_data', test_user_data)
         if User.objects.filter(**test_user_data).exists():
             user = User.objects.get(**test_user_data)
+            print('***user', user)
             if user.is_active:
                 if user.is_authenticated:
                     return UserProfile.objects.get(user=user)
                 else:
-                    print("USer not auth")
+                    print("***USer not auth")
             else:
-                print("USer not active")
+                print("***USer not active")
         else:
-            print("USER NOT EXIST")
+            print("***USER NOT EXIST")
             return False
     else:
-        print("Incoming args not correct")
+        print("***Incoming args not correct")
 
 
 @api_view(['POST'])
@@ -118,7 +129,9 @@ def check_user(request):
 
 @api_view(['POST'])
 def user_courses(request):
+    print('***request.data', request.data)
     user_profile = search_user_profile(**request.data)
+    print('***user_profile', user_profile)
     if user_profile:
         available_courses = []
         for course_id in user_profile.user_courses:

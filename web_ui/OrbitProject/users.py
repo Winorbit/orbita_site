@@ -34,9 +34,10 @@ def index(request):
 def signup(request):
     if request.method == 'POST':
         form = SignUpForm(data=request.POST)
+        print("***form", form.cleaned_data)
         if form.is_valid():
             req = requests.post("http://127.0.0.1:8000/users/", data=form.cleaned_data)
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", req)
+            print("***req", req)
 
             if req.status_code == 201:
                 return HttpResponseRedirect("/my_cabinet")
@@ -51,52 +52,48 @@ def signup(request):
             return HttpResponseRedirect("/my_cabinet")
             pass
 
+#  12_gor_mor
 def login(request):
-    #  12gor-mor
     if request.method == 'POST':
         form = LoginForm(data=request.POST)
         if form.is_valid():
-            user_name = form.cleaned_data.get('username')
-            user_pass = form.cleaned_data.get('password')
-
-            form_data = {'username': user_name, "password":user_pass}
-
-            check_user = requests.post(endpoints.CHECK_USER_PROFILE_ENDPOINT, data = form_data)
-            if check_user.status_code == 202:
-                user_data  = requests.post(endpoints.GET_USER_PROFILE_ENDPOINT, data = form_data)
-
-
-                form_data.update(user_data.json())
-
-                common_funcs.write_into_session(request,**form_data)
+            check_user = requests.post("http://127.0.0.1:8000/search_user", data = form.cleaned_data)
+            if check_user.status_code == 200:
+                common_funcs.write_into_session(request,**check_user.json())
                 return HttpResponseRedirect("/my_cabinet")
-            else:
-                return HttpResponseRedirect("/enter")
-        return HttpResponseRedirect('/')
-          
+        #     else:
+        #         return HttpResponseRedirect("/enter")
+        # return HttpResponseRedirect('/') 
     else:
         form = LoginForm()
         return render(request, template_adresses.LOGIN_PAGE, {'form': form})
         pass
 
+
 def user_logout(request):
     logout(request)
     return HttpResponseRedirect("/")
 
+# 12_gor_mor 
 def user_cabinet(request):
-    if common_funcs.check_user_profile_exist(request):
-        username = request.session.get("username")
-        user_id = request.session.get("user_id")
-        data={"username": username,  "user_id": user_id}
-
+    username = request.session.get("username")
+    userprofile_id = request.session.get("userprofile_id")
+    if username and userprofile_id:
+        user_courses = request.session.get("user_courses")
+        print('***user_courses', user_courses)
+        # data={"username": username,  "userprofile_id": userprofile_id}
+        # print('***data', data)
         # response = requests.post(endpoints.USER_COURSES_ENDPOINT, data={"username": username,  "user_id": user_id})
-        res = common_funcs.send_to_content(endpoints.USER_COURSES_ENDPOINT, data )
-        available_courses = res.json()
+        # res = common_funcs.send_to_content(endpoints.USER_COURSES_ENDPOINT, data )
+        # print('***res', res)
+        # available_courses = res.json()
+        # print('***available_courses', available_courses)
 
-        return render(request, template_adresses.USER_CABINET_PAGE,{'available_courses':available_courses})
+        return render(request, template_adresses.USER_CABINET_PAGE, {'available_courses':user_courses})
     else:
         return HttpResponseRedirect("/enter")
         pass
+
 
 def edit_profile(request):
     if request.method == 'POST':
