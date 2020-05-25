@@ -1,7 +1,7 @@
 from content_app.models import Course, Lesson, Post, UserProfile
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
@@ -16,7 +16,6 @@ from drf_yasg import openapi
 from content_app.serializers import CourseSerializer, LessonSerializer, PostSerializer, UserSerializer, UserProfileSerializer
 
 import json
-
 
 
 class UserList(viewsets.ModelViewSet):
@@ -40,15 +39,12 @@ class UserList(viewsets.ModelViewSet):
 def search_user(request):
     user_name = request.data.get("username")
     password = request.data.get("password")
-
     if User.objects.filter(password=password, username=user_name).exists():
         user = User.objects.get(password=password, username=user_name)
         user_profile = UserProfile.objects.get(user=user)
-        print('***user_profile', user_profile)  # UserProfile object (9)
-        print('***user', user)                  # egor41
         data = {**UserSerializer(user).data, **UserProfileSerializer(user_profile).data}
-        print('***data', data)
         return Response(data, status=status.HTTP_200_OK)
+    return JsonResponse(status=status.HTTP_404_NOT_FOUND)
 
 
 class UserProfileClass(viewsets.ModelViewSet):
@@ -58,10 +54,8 @@ class UserProfileClass(viewsets.ModelViewSet):
 
 def search_user_profile(**kwargs):
     # ВОТ ТУТ ЧЕКНУТЬ ПРАВИЛЬНУЮ ПРОВЕРКУ АРГУМЕНТОВ
-    print('***kwargs', kwargs)
     if kwargs.get("username") and kwargs.get("user_id"):
         test_user_data = {"username":kwargs.get("username")[0], "user_id":kwargs.get("user_id")[0]}
-        print('***test_user_data', test_user_data)
         if User.objects.filter(**test_user_data).exists():
             user = User.objects.get(**test_user_data)
             print('***user', user)
@@ -129,9 +123,7 @@ def check_user(request):
 
 @api_view(['POST'])
 def user_courses(request):
-    print('***request.data', request.data)
     user_profile = search_user_profile(**request.data)
-    print('***user_profile', user_profile)
     if user_profile:
         available_courses = []
         for course_id in user_profile.user_courses:

@@ -3,13 +3,16 @@
 {% block title %}Sign Up{% endblock %}
 
 {% block content %}
-  <h2>Sign up</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Sign up</button>
-  </form>
-
-  if form print error
+<h2>Авторизация</h2>
+{% if danger %}
+<div class="alert alert-danger" role="alert">
+    Человек имя или пароль ты ввел неверно!
+</div>
+{% endif %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Sign up</button>
+    </form>
+if form print error
 {% endblock %}
-
