@@ -4,7 +4,8 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from .forms import SignUpForm, LoginForm, EditProfile
-from django.contrib.auth.decorators import login_required
+
+from django.contrib import messages
 
 from . import endpoints
 from . import template_adresses
@@ -38,12 +39,19 @@ def index(request):
 def signup(request):
     if request.method == 'POST':
         form = SignUpForm(data=request.POST)
+        # print('***form', data)
         if form.is_valid():
             req = requests.post("http://127.0.0.1:8000/users/", data=form.cleaned_data)
             if req.status_code == 201:
-                return HttpResponseRedirect("/my_cabinet")
-            else:
-                return HttpResponseRedirect("/error_page")          
+                user = form.cleaned_data.get('username')
+                messages.success(request, f'{user}, для тебя был создан аккаунт, наслождайся =)')
+                return redirect("/login")
+            elif req.status_code == 409:
+                print('***error409')
+                messages.error(request, 'Такой пользователь уже существует')
+                context={}
+                return render(request, template_adresses.SIGNUP_PAGE, context)
+        return render(request, template_adresses.SIGNUP_PAGE, {'form': form})          
     else:
         if not common_funcs.check_user_exist(request):
             form = SignUpForm()
@@ -60,11 +68,13 @@ def login(request):
             check_user = requests.post("http://127.0.0.1:8000/search_user", data = form.cleaned_data)
             if check_user.status_code == 200:
                 common_funcs.write_into_session(request,**check_user.json())
-                return HttpResponseRedirect("/my_cabinet")
+                return HttpResponseRedirect('/my_cabinet')
             else:
-                form = LoginForm(request.POST)
-                return render(request, template_adresses.LOGIN_PAGE, {'form': form, 'danger': True})
-        return HttpResponseRedirect('/') 
+                messages.info(request, 'Чет не то вводишь, человек.')
+                # form = LoginForm(request.POST)
+                # return render(request, template_adresses.LOGIN_PAGE, {'form': form, 'danger': True})
+        context={}
+        return render(request, template_adresses.LOGIN_PAGE, context) 
     else:
         form = LoginForm()
         return render(request, template_adresses.LOGIN_PAGE, {'form': form})
@@ -73,7 +83,7 @@ def login(request):
 
 def user_logout(request):
     logout(request)
-    return HttpResponseRedirect("/")
+    return render(request, template_adresses.INDEX_PAGE)
 
  
 def user_cabinet(request):

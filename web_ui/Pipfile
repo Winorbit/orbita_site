@@ -10,6 +10,7 @@ gunicorn = "*"
 requests = "*"
 Django = ">=2.1"
 Pillow = "*"
+psycopg2-binary = "*"
 
 [requires]
 python_version = "3.7"

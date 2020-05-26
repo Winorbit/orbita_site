@@ -44,6 +44,8 @@ def choice_default_db():
         return local_db
         pass
 
+print('***', choice_default_db())
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',

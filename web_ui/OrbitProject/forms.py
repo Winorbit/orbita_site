@@ -8,7 +8,7 @@ class SignUpForm(UserCreationForm):
   # email = forms.EmailField(max_length=254)
 	class Meta:
 		model = User
-		fields = ('username','email')
+		fields = ('username','email','password1','password2')
 
 class EditProfile(forms.Form):
     username = forms.CharField(required = False)

@@ -21,8 +21,9 @@ import json
 class UserList(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-
+    print('***create', queryset)
     def create(self, request):
+        print('***create', request)
         email = request.data.get("email")
         username = request.data.get("username")
         password = request.data.get("password1")
@@ -33,6 +34,8 @@ class UserList(viewsets.ModelViewSet):
             new_user = User.objects.get(email=email, username=username)
             new_user_profile = UserProfile.objects.create(user=new_user, id = new_user.id, user_courses = [])
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return JsonResponse(status=status.HTTP_404_NOT_FOUND)
+        # return Response(status=status.HTTP_202_ACCEPTED)
 
 
 @api_view(['POST'])
@@ -75,12 +78,15 @@ def search_user_profile(**kwargs):
 
 @api_view(['POST'])
 def create_new_user(request):
+    print('***create_new_user', request)
     data = request.data
+    print('***dict_data', data)
     dict_data = data.dict()
-
+    print('***dict_data', dict_data)
     if not User.objects.filter(**dict_data).exists():
         new_user = User.objects.create(email = dict_data["email"], password = dict_data["password"], username=dict_data["username"])
         new_user_profile = UserProfile.objects.create(user=new_user, user_courses = [])
+        return Response(status=HTTP_409_CONFLICT)
     return Response(status=status.HTTP_202_ACCEPTED)
 
 @api_view(['PUT'])
