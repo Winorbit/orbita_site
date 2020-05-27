@@ -1,4 +1,4 @@
 .env
 /nginx/logs/
 .idea/
-db.sqlite3
+web_ui/db.sqlite3

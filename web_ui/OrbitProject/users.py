@@ -75,7 +75,6 @@ def login(request):
             else:
                 messages.info(request, 'Чет не то вводишь, человек.')
                 context={}
-                print('***context', context)
                 return render(request, template_adresses.LOGIN_PAGE, context) 
     else:
         form = LoginForm()
@@ -90,8 +89,8 @@ def user_logout(request):
  
 def user_cabinet(request):
     username = request.session.get("username")
-    userprofile_id = request.session.get("userprofile_id")
-    if username and userprofile_id:
+    user_id = request.session.get("user_id")
+    if username and user_id:
         user_courses = request.session.get("user_courses")
         return render(request, template_adresses.USER_CABINET_PAGE, {'available_courses':user_courses})
     else:
@@ -146,6 +145,3 @@ def edit_profile(request):
         else:
             return HttpResponseRedirect("/enter")
             pass
-            
-
-        

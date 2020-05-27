@@ -40,10 +40,10 @@ class UserList(viewsets.ModelViewSet):
 
 @api_view(['POST'])
 def search_user(request):
-    user_name = request.data.get("username")
+    username = request.data.get("username")
     password = request.data.get("password")
-    if User.objects.filter(password=password, username=user_name).exists():
-        user = User.objects.get(password=password, username=user_name)
+    if User.objects.filter(password=password, username=username).exists():
+        user = User.objects.get(password=password, username=username)
         user_profile = UserProfile.objects.get(user=user)
         data = {**UserSerializer(user).data, **UserProfileSerializer(user_profile).data}
         return Response(data, status=status.HTTP_200_OK)
@@ -55,11 +55,11 @@ class UserProfileClass(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
 
-
+ 
 def search_user_profile(**kwargs):
     # ВОТ ТУТ ЧЕКНУТЬ ПРАВИЛЬНУЮ ПРОВЕРКУ АРГУМЕНТОВ
     if kwargs.get("username") and kwargs.get("user_id"):
-        test_user_data = {"username":kwargs.get("username")[0], "user_id":kwargs.get("user_id")[0]}
+        test_user_data = {"username":kwargs.get("username")[0], "id":kwargs.get("user_id")[0]}
         if User.objects.filter(**test_user_data).exists():
             user = User.objects.get(**test_user_data)
             if user.is_active:

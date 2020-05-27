@@ -32,4 +32,3 @@ def course(request, course_id):
 
     return Response(dicta, status=status.HTTP_202_ACCEPTED)
     pass
-
