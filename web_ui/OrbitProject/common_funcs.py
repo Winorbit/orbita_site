@@ -49,12 +49,9 @@ def check_user_exist(request):
 
 def check_user_profile_exist(request):
     user = get_user_from_request(request)
-    print('***user_check', user)
     if user:
         user_data = {"username": user.username,  "user_id": user.user_id}
         res = send_to_content(endpoints.CHECK_USER_PROFILE_ENDPOINT, user_data)
-        print('***user_data', user_data)
-        print('***res', res)
         if res.status_code == 202:
             return True
     else:
@@ -102,7 +99,6 @@ def redirect_to_main():
 
 
 def write_into_session(request, **kwargs):
-    print('***kwargs', kwargs)
     user_name = kwargs.get('username')
     userprofile_id = kwargs.get('id')
     user_courses = kwargs.get('user_courses')

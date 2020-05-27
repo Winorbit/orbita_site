@@ -2,6 +2,3 @@
 /nginx/logs/
 .idea/
 db.sqlite3
-Pipfile
-Pipfile.lock
-requirements

@@ -21,9 +21,8 @@ import json
 class UserList(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    print('***create', queryset)
+
     def create(self, request):
-        print('***create', request)
         email = request.data.get("email")
         username = request.data.get("username")
         password = request.data.get("password1")
@@ -34,8 +33,9 @@ class UserList(viewsets.ModelViewSet):
             new_user = User.objects.get(email=email, username=username)
             new_user_profile = UserProfile.objects.create(user=new_user, id = new_user.id, user_courses = [])
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return JsonResponse(status=status.HTTP_404_NOT_FOUND)
-        # return Response(status=status.HTTP_202_ACCEPTED)
+        else:
+            return Response(status=status.HTTP_409_CONFLICT)
+        
 
 
 @api_view(['POST'])
@@ -47,7 +47,8 @@ def search_user(request):
         user_profile = UserProfile.objects.get(user=user)
         data = {**UserSerializer(user).data, **UserProfileSerializer(user_profile).data}
         return Response(data, status=status.HTTP_200_OK)
-    return JsonResponse(status=status.HTTP_404_NOT_FOUND)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 class UserProfileClass(viewsets.ModelViewSet):
@@ -61,7 +62,6 @@ def search_user_profile(**kwargs):
         test_user_data = {"username":kwargs.get("username")[0], "user_id":kwargs.get("user_id")[0]}
         if User.objects.filter(**test_user_data).exists():
             user = User.objects.get(**test_user_data)
-            print('***user', user)
             if user.is_active:
                 if user.is_authenticated:
                     return UserProfile.objects.get(user=user)
@@ -76,19 +76,6 @@ def search_user_profile(**kwargs):
         print("***Incoming args not correct")
 
 
-@api_view(['POST'])
-def create_new_user(request):
-    print('***create_new_user', request)
-    data = request.data
-    print('***dict_data', data)
-    dict_data = data.dict()
-    print('***dict_data', dict_data)
-    if not User.objects.filter(**dict_data).exists():
-        new_user = User.objects.create(email = dict_data["email"], password = dict_data["password"], username=dict_data["username"])
-        new_user_profile = UserProfile.objects.create(user=new_user, user_courses = [])
-        return Response(status=HTTP_409_CONFLICT)
-    return Response(status=status.HTTP_202_ACCEPTED)
-
 @api_view(['PUT'])
 def add_user_course(request):
     course_id = request.data["course_id"]
@@ -99,6 +86,7 @@ def add_user_course(request):
         return Response(status=status.HTTP_201_CREATED)
     else:
         print("PROBLEM")
+
 
 @api_view(['DELETE'])
 def remove_user_course(request):
@@ -113,7 +101,6 @@ def remove_user_course(request):
         return Response("PASKUDA")
 
 
-
 @api_view(['POST'])
 def check_user(request):
     data = request.data
@@ -126,6 +113,7 @@ def check_user(request):
     else:
         return Response(status=status.HTTP_204_NO_CONTENT)
         pass
+
 
 @api_view(['POST'])
 def user_courses(request):

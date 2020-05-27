@@ -42,8 +42,7 @@ urlpatterns = [
 
    path("check_user", users.check_user),
    path("user_courses", users.user_courses),
-
-   path("create_new_user", users.create_new_user),
+   
    path("add_user_course", users.add_user_course),
    path("edit_user_profile", users.edit_user_profile),
 

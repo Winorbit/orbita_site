@@ -37,28 +37,31 @@ def index(request):
 
 
 def signup(request):
+    form = SignUpForm()
     if request.method == 'POST':
         form = SignUpForm(data=request.POST)
-        # print('***form', data)
         if form.is_valid():
             req = requests.post("http://127.0.0.1:8000/users/", data=form.cleaned_data)
             if req.status_code == 201:
                 user = form.cleaned_data.get('username')
-                messages.success(request, f'{user}, для тебя был создан аккаунт, наслождайся =)')
-                return redirect("/login")
+                messages.success(request, f'{user}, для тебя был создан аккаунт, авторизуйся')
+                return redirect('/login')
             elif req.status_code == 409:
-                print('***error409')
                 messages.error(request, 'Такой пользователь уже существует')
-                context={}
+                context = {'form': form}
                 return render(request, template_adresses.SIGNUP_PAGE, context)
-        return render(request, template_adresses.SIGNUP_PAGE, {'form': form})          
-    else:
-        if not common_funcs.check_user_exist(request):
-            form = SignUpForm()
-            return render(request, template_adresses.SIGNUP_PAGE, {'form': form})
-        else:
-            return HttpResponseRedirect("/my_cabinet")
-            pass
+
+    context = {'form': form}
+    return render(request, template_adresses.SIGNUP_PAGE, context)
+
+
+        # return render(request, template_adresses.SIGNUP_PAGE, {'form': form})          
+    # else:
+    #     if not common_funcs.check_user_exist(request):
+    #         return render(request, template_adresses.SIGNUP_PAGE, {'form': form})
+    #     else:
+    #         return HttpResponseRedirect("/my_cabinet")
+    #         pass
 
 
 def login(request):
@@ -71,10 +74,9 @@ def login(request):
                 return HttpResponseRedirect('/my_cabinet')
             else:
                 messages.info(request, 'Чет не то вводишь, человек.')
-                # form = LoginForm(request.POST)
-                # return render(request, template_adresses.LOGIN_PAGE, {'form': form, 'danger': True})
-        context={}
-        return render(request, template_adresses.LOGIN_PAGE, context) 
+                context={}
+                print('***context', context)
+                return render(request, template_adresses.LOGIN_PAGE, context) 
     else:
         form = LoginForm()
         return render(request, template_adresses.LOGIN_PAGE, {'form': form})
