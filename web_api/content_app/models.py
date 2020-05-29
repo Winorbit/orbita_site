@@ -36,4 +36,4 @@ class Post(BaseTextModel):
 class UserProfile(models.Model):
     profile_image = models.ImageField(upload_to="user_pics", blank=True, null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    user_courses = ArrayField(models.CharField(max_length=36,))
+    user_courses = ArrayField(models.CharField(max_length=36, blank=True))

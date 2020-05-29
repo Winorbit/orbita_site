@@ -26,16 +26,44 @@ class UserList(viewsets.ModelViewSet):
         email = request.data.get("email")
         username = request.data.get("username")
         password = request.data.get("password1")
+        print('***request.data', request.data)
 
         serializer = UserSerializer(data={"username":username, "email":email, "password":password})
+        print('***serializer', serializer)
         if serializer.is_valid():
+            print('***serializerIS', serializer.is_valid())
             serializer.save()
             new_user = User.objects.get(email=email, username=username)
             new_user_profile = UserProfile.objects.create(user=new_user, id = new_user.id, user_courses = [])
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(status=status.HTTP_409_CONFLICT)
-        
+
+
+class UserProfileClass(viewsets.ModelViewSet):
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfileSerializer
+    print('***queryset', queryset)
+    print('***serializer_class', serializer_class)
+
+    # def update(self, request, pk=None):
+    #     id = request.data.get("id")
+    #     profile_image = request.data.get("profile_image")
+    #     user_courses = request.data.get("user_courses")
+    #     user = request.data.get("user")
+    #     print('***user_courses', user_courses)
+    #     print('***pk', pk)
+    #     serializer = UserProfileSerializer(data={"profile_image":profile_image, "user_courses":user_courses, "user":user})
+    #     print('***serializer', serializer)
+    #     try:
+    #         if serializer.is_valid():
+    #             print('***serializerIS', serializer.is_valid())
+    #             serializer.save()
+    #             return Response(status=status.HTTP_201_CREATED)
+    #     except Exception as e:
+    #         print('***E', e)
+        # else:
+        #     return Response(status=status.HTTP_409_CONFLICT)
 
 
 @api_view(['POST'])
@@ -49,11 +77,6 @@ def search_user(request):
         return Response(data, status=status.HTTP_200_OK)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
-
-
-class UserProfileClass(viewsets.ModelViewSet):
-    queryset = UserProfile.objects.all()
-    serializer_class = UserProfileSerializer
 
  
 def search_user_profile(**kwargs):
@@ -76,16 +99,16 @@ def search_user_profile(**kwargs):
         print("***Incoming args not correct")
 
 
-@api_view(['PUT'])
-def add_user_course(request):
-    course_id = request.data["course_id"]
-    profile_on_update = search_user_profile(**request.data)
-    if course_id not in profile_on_update.user_courses:
-        profile_on_update.user_courses.append(course_id)
-        profile_on_update.save()
-        return Response(status=status.HTTP_201_CREATED)
-    else:
-        print("PROBLEM")
+# @api_view(['PUT'])
+# def add_user_course(request):
+#     course_id = request.data["course_id"]
+#     profile_on_update = search_user_profile(**request.data)
+#     if course_id not in profile_on_update.user_courses:
+#         profile_on_update.user_courses.append(course_id)
+#         profile_on_update.save()
+#         return Response(status=status.HTTP_201_CREATED)
+#     else:
+#         print("PROBLEM")
 
 
 @api_view(['DELETE'])
