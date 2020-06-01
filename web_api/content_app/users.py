@@ -26,12 +26,9 @@ class UserList(viewsets.ModelViewSet):
         email = request.data.get("email")
         username = request.data.get("username")
         password = request.data.get("password1")
-        print('***request.data', request.data)
 
         serializer = UserSerializer(data={"username":username, "email":email, "password":password})
-        print('***serializer', serializer)
         if serializer.is_valid():
-            print('***serializerIS', serializer.is_valid())
             serializer.save()
             new_user = User.objects.get(email=email, username=username)
             new_user_profile = UserProfile.objects.create(user=new_user, id = new_user.id, user_courses = [])
@@ -43,8 +40,6 @@ class UserList(viewsets.ModelViewSet):
 class UserProfileClass(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
-    print('***queryset', queryset)
-    print('***serializer_class', serializer_class)
 
     # def update(self, request, pk=None):
     #     id = request.data.get("id")

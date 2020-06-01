@@ -38,14 +38,11 @@ def single_course(request, id):
                 
                 course_id = request.POST["submit"]
                 user_courses.append(course_id)
-                
                 req = requests.put(f'{endpoints.ADD_USER_COURSE_ENDPOINT}/{user_id}/', data={"user_courses":user_courses, "user": user_id})
-                print('***req', req)
                 if req.status_code == 200:
                     request.session.modified = True
 
                     user = users.user_info(request)
-                    print('***user_courses', user)
                     course_data = requests.get(f"{endpoints.SINGLE_COURSE_ENDPOINT}/{id}").json()
                     return render(request, template_adresses.SINGLE_COURSE_PAGE, {'course_data':course_data, "user_info":user})
 
@@ -56,17 +53,13 @@ def single_course(request, id):
 
                 course_id = request.POST["leave"]
                 user_courses.remove(course_id)
-                print('***user_courses',user_courses)
                 req = requests.put(f'{endpoints.ADD_USER_COURSE_ENDPOINT}/{user_id}/', data={"user_courses":user_courses, "user": user_id})
-                print('***req',req)
                 if req.status_code == 200:
                     request.session.modified = True
-                    print('***request.session', user_courses)
+
                     user = users.user_info(request)
-                    print('***user_courses2', user)
                     course_data = requests.get(f"{endpoints.SINGLE_COURSE_ENDPOINT}/{id}").json()
                     return render(request, template_adresses.SINGLE_COURSE_PAGE, {'course_data':course_data, "user_info":user})
-        # return render(request, f"{template_adresses.SINGLE_COURSE_PAGE}/{course_id}/")
         return render(request, template_adresses.SINGLE_COURSE_PAGE)
 
     if request.method == 'GET':

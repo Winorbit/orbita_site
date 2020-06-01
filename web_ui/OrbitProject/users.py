@@ -88,13 +88,10 @@ def user_logout(request):
 
  
 def user_cabinet(request):
-    print('***user_cabinet')
     username = request.session.get("username")
     user_id = request.session.get("user_id")
     if username and user_id:
-        print('***username and user_id')
         user_courses = request.session.get("user_courses")
-        print('***user_courses', user_courses)
         return render(request, template_adresses.USER_CABINET_PAGE, {'available_courses':user_courses})
     else:
         return HttpResponseRedirect("/enter")
