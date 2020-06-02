@@ -19,6 +19,6 @@ from django.urls import include, path
 
 
 urlpatterns = [
-    path('', include('OrbitProject.urls')),
+    path('', include('OrbitProject.urls', namespace='orbita')),
     path('admin/', admin.site.urls),
 ]

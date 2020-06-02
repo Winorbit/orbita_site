@@ -43,6 +43,7 @@ def choice_default_db():
     else:
         return local_db
         pass
+    
 
 INSTALLED_APPS = [
     'django.contrib.admin',

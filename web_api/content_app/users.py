@@ -1,7 +1,7 @@
 from content_app.models import Course, Lesson, Post, UserProfile
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
@@ -18,90 +18,63 @@ from content_app.serializers import CourseSerializer, LessonSerializer, PostSeri
 import json
 
 
-def get_Host_name_IP(): 
-    try: 
-        host_name = socket.gethostname() 
-        host_ip = socket.gethostbyname(host_name) 
-        print("Hostname :  ",host_name) 
-        print("IP : ",host_ip) 
-    except: 
-        print("Unable to get Hostname and IP") 
-  
-
-
 class UserList(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    get_Host_name_IP()
 
-    def create(self, validated_data):
-        serializer = UserSerializer(data=validated_data)
+    def create(self, request):
+        email = request.data.get("email")
+        username = request.data.get("username")
+        password = request.data.get("password1")
+
+        serializer = UserSerializer(data={"username":username, "email":email, "password":password})
         if serializer.is_valid():
-            print(serializer)
-        else:
             serializer.save()
-            new_user = User.objects.get(email = validated_data.data["email"])
-            new_user_profile = UserProfile.objects.create(user=new_user, user_courses = [])
+            new_user = User.objects.get(email=email, username=username)
+            new_user_profile = UserProfile.objects.create(user=new_user, id = new_user.id, user_courses = [])
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(status=status.HTTP_201_CREATED)
-        pass
+        else:
+            return Response(status=status.HTTP_409_CONFLICT)
+        
 
-class UserProfileClass(APIView):
-    # http_method_names = ['GET', 'PUT', 'DELETE']
-    def get_object(self, user_id):
-        return UserProfile.objects.get(pk=user_id)
 
-    def get(self, request, user_id, format=None):
-        user_profile = self.get_object(user_id)
-        user_profile_serializer = UserProfileSerializer(user_profile)
-        return Response(user_profile_serializer.data)
-        pass
+@api_view(['POST'])
+def search_user(request):
+    user_name = request.data.get("username")
+    password = request.data.get("password")
+    if User.objects.filter(password=password, username=user_name).exists():
+        user = User.objects.get(password=password, username=user_name)
+        user_profile = UserProfile.objects.get(user=user)
+        data = {**UserSerializer(user).data, **UserProfileSerializer(user_profile).data}
+        return Response(data, status=status.HTTP_200_OK)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
-    def delete(self, request, user_id, format=None):
-        user_on_delete = UserProfile.objects.get(pk = user_id)
-        user_on_delete.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
-    def put(self, request, user_id):
-        if request.data["username"]:
-            user = User.objects.get(pk = user_id)
-            user.name=request.data["username"]
-            user.save()
+class UserProfileClass(viewsets.ModelViewSet):
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfileSerializer
 
-        return Response(status=status.HTTP_201_CREATED)
-        pass
 
 def search_user_profile(**kwargs):
     # ВОТ ТУТ ЧЕКНУТЬ ПРАВИЛЬНУЮ ПРОВЕРКУ АРГУМЕНТОВ
-    # print(kwargs)
-    if kwargs.get("username") and kwargs.get("password"):
-        test_user_data = {"username":kwargs.get("username")[0], "password":kwargs.get("password")[0]}
-        # print(test_user_data)
+    if kwargs.get("username") and kwargs.get("user_id"):
+        test_user_data = {"username":kwargs.get("username")[0], "user_id":kwargs.get("user_id")[0]}
         if User.objects.filter(**test_user_data).exists():
             user = User.objects.get(**test_user_data)
             if user.is_active:
                 if user.is_authenticated:
                     return UserProfile.objects.get(user=user)
                 else:
-                    print("USer not auth")
+                    print("***USer not auth")
             else:
-                print("USer not active")
+                print("***USer not active")
         else:
-            print("USER NOT EXIST")
+            print("***USER NOT EXIST")
             return False
     else:
-        print("Incoming args not correct")
+        print("***Incoming args not correct")
 
-
-@api_view(['POST'])
-def create_new_user(request):
-    data = request.data
-    dict_data = data.dict()
-
-    if not User.objects.filter(**dict_data).exists():
-        new_user = User.objects.create(email = dict_data["email"], password = dict_data["password"], username=dict_data["username"])
-        new_user_profile = UserProfile.objects.create(user=new_user, user_courses = [])
-    return Response(status=status.HTTP_202_ACCEPTED)
 
 @api_view(['PUT'])
 def add_user_course(request):
@@ -113,6 +86,7 @@ def add_user_course(request):
         return Response(status=status.HTTP_201_CREATED)
     else:
         print("PROBLEM")
+
 
 @api_view(['DELETE'])
 def remove_user_course(request):
@@ -127,7 +101,6 @@ def remove_user_course(request):
         return Response("PASKUDA")
 
 
-
 @api_view(['POST'])
 def check_user(request):
     data = request.data
@@ -140,6 +113,7 @@ def check_user(request):
     else:
         return Response(status=status.HTTP_204_NO_CONTENT)
         pass
+
 
 @api_view(['POST'])
 def user_courses(request):

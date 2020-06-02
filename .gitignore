@@ -1,2 +1,4 @@
-/.env
+.env
 /nginx/logs/
+.idea/
+db.sqlite3

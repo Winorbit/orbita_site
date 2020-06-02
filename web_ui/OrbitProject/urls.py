@@ -1,5 +1,5 @@
 from django.urls import include, path, re_path
-from . import users, posts, courses_and_lessons 
+from . import users, posts, courses_and_lessons
 # from django.contrib.auth import views as auth_views
 
 app_name = "OrbitProject"
@@ -16,11 +16,11 @@ urlpatterns = [
 
     path('my_cabinet/', users.user_cabinet),
     path('edit_profile', users.edit_profile),  # добавить по айдишке
-    path('login/', users.login),
+    path('login/', users.login, name='login'),
     path('logout/', users.user_logout),
     path('enter/', users.enter),
 
-    re_path(r'^signup/$', users.signup, name='signup'),
+    re_path(r'^signup/$', users.signup, name='register'),
     
 ]
 
