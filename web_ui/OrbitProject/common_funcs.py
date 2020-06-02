@@ -100,11 +100,11 @@ def redirect_to_main():
 
 def write_into_session(request, **kwargs):
     user_name = kwargs.get('username')
-    userprofile_id = kwargs.get('id')
+    user_id = kwargs.get('id')
     user_courses = kwargs.get('user_courses')
 
     request.session["username"] = user_name
-    request.session["userprofile_id"] = userprofile_id
+    request.session["user_id"] = user_id
     request.session["user_courses"] = user_courses
     request.session.modified = True
 
@@ -115,8 +115,6 @@ def write_into_session(request, **kwargs):
 
 # def check_user_exist():
 #     return binary try\false
-
-
 
 # check_user_profile_exist
 

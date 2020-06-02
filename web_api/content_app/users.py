@@ -35,31 +35,49 @@ class UserList(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(status=status.HTTP_409_CONFLICT)
-        
-
-
-@api_view(['POST'])
-def search_user(request):
-    user_name = request.data.get("username")
-    password = request.data.get("password")
-    if User.objects.filter(password=password, username=user_name).exists():
-        user = User.objects.get(password=password, username=user_name)
-        user_profile = UserProfile.objects.get(user=user)
-        data = {**UserSerializer(user).data, **UserProfileSerializer(user_profile).data}
-        return Response(data, status=status.HTTP_200_OK)
-    else:
-        return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 class UserProfileClass(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
 
+    # def update(self, request, pk=None):
+    #     id = request.data.get("id")
+    #     profile_image = request.data.get("profile_image")
+    #     user_courses = request.data.get("user_courses")
+    #     user = request.data.get("user")
+    #     print('***user_courses', user_courses)
+    #     print('***pk', pk)
+    #     serializer = UserProfileSerializer(data={"profile_image":profile_image, "user_courses":user_courses, "user":user})
+    #     print('***serializer', serializer)
+    #     try:
+    #         if serializer.is_valid():
+    #             print('***serializerIS', serializer.is_valid())
+    #             serializer.save()
+    #             return Response(status=status.HTTP_201_CREATED)
+    #     except Exception as e:
+    #         print('***E', e)
+        # else:
+        #     return Response(status=status.HTTP_409_CONFLICT)
 
+
+@api_view(['POST'])
+def search_user(request):
+    username = request.data.get("username")
+    password = request.data.get("password")
+    if User.objects.filter(password=password, username=username).exists():
+        user = User.objects.get(password=password, username=username)
+        user_profile = UserProfile.objects.get(user=user)
+        data = {**UserSerializer(user).data, **UserProfileSerializer(user_profile).data}
+        return Response(data, status=status.HTTP_200_OK)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+ 
 def search_user_profile(**kwargs):
     # ВОТ ТУТ ЧЕКНУТЬ ПРАВИЛЬНУЮ ПРОВЕРКУ АРГУМЕНТОВ
     if kwargs.get("username") and kwargs.get("user_id"):
-        test_user_data = {"username":kwargs.get("username")[0], "user_id":kwargs.get("user_id")[0]}
+        test_user_data = {"username":kwargs.get("username")[0], "id":kwargs.get("user_id")[0]}
         if User.objects.filter(**test_user_data).exists():
             user = User.objects.get(**test_user_data)
             if user.is_active:
@@ -76,16 +94,16 @@ def search_user_profile(**kwargs):
         print("***Incoming args not correct")
 
 
-@api_view(['PUT'])
-def add_user_course(request):
-    course_id = request.data["course_id"]
-    profile_on_update = search_user_profile(**request.data)
-    if course_id not in profile_on_update.user_courses:
-        profile_on_update.user_courses.append(course_id)
-        profile_on_update.save()
-        return Response(status=status.HTTP_201_CREATED)
-    else:
-        print("PROBLEM")
+# @api_view(['PUT'])
+# def add_user_course(request):
+#     course_id = request.data["course_id"]
+#     profile_on_update = search_user_profile(**request.data)
+#     if course_id not in profile_on_update.user_courses:
+#         profile_on_update.user_courses.append(course_id)
+#         profile_on_update.save()
+#         return Response(status=status.HTTP_201_CREATED)
+#     else:
+#         print("PROBLEM")
 
 
 @api_view(['DELETE'])

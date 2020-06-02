@@ -16,7 +16,7 @@ router = DefaultRouter()
 router.register(r'lessons', courses.LessonsList)
 router.register(r'courses', courses.CoursesList)
 router.register(r'posts', posts.PostsList)
-router.register(r'users', users.UserList)
+router.register(r'users', users.UserList, basename='users')
 router.register(r'users_profiles', users.UserProfileClass)
 
 
@@ -43,7 +43,7 @@ urlpatterns = [
    path("check_user", users.check_user),
    path("user_courses", users.user_courses),
    
-   path("add_user_course", users.add_user_course),
+#    path("add_user_course", users.add_user_course),
    path("edit_user_profile", users.edit_user_profile),
 
 

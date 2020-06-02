@@ -1,25 +1,11 @@
 {% extends 'static/base.html' %}
 {% load static %}
-{% block title %}
-Занятие  {{lesson_data.title}}
+{% block title %}Занятие {{lesson_data.title}}{% endblock %}
 
-{% endblock %}
 {% block content %}
-
-
-
-     {% for lesson in lessons %}
-
-        <ul>
-       
-       
-            <li><a href="/lessons/{{lesson.id}}">{{lesson.title}}</a></li>
-        
-
-        </ul>
-    
-
-        {% endfor %}
-
-
+{% for lesson in lessons %}
+<ul>
+    <li><a href="/lessons/{{lesson.id}}">{{lesson.title}}</a></li>
+</ul>
+{% endfor %}
 {% endblock %}
