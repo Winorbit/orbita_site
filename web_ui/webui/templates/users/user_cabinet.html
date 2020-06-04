@@ -1,4 +1,4 @@
-{% extends 'static/base.html' %}
+{% extends 'base.html' %}
 {% load static %}
 {% block title %}Мой кабинет{% endblock %}
 
@@ -9,15 +9,14 @@
         <h5 class="card-title">{{request.session.username}}</h5>
         <p class="card-text">Взависимости от процента прохождения курса можно вешать какие нить интересные мотивирующие цитаты</p>
     </div>
-    <ul class="list-group list-group-flush">
-        <li class="list-group-item">"Python для маленьких и тупых" пройдено: 20%</li>
-        <li class="list-group-item">"Django для чайников" пройдено: 10%</li>
-        <li class="list-group-item">"Основы Linux для котят" пройдено: 30%</li>
-    </ul>
+
     <div class="card-body">
         <a href="/edit_profile" class="card-link">Редактировать профиль</a>
     </div>
 </div>
+
+
+
 <div class="container mt-5">
     Мои курсы
     {% if request.session.user_courses|length == 0 %}

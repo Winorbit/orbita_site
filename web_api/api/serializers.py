@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import User
-from api.models import Course, Lesson, Post, UserProfile
+from api.models import Course, Lesson, UserProfile
 
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:
@@ -11,11 +11,6 @@ class CourseSerializer(serializers.ModelSerializer):
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
-        fields = '__all__'
-
-class PostSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Post
         fields = '__all__'
 
 class UserProfileSerializer(serializers.ModelSerializer):

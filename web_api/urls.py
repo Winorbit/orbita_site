@@ -3,7 +3,7 @@ from django.conf.urls import include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from api import  posts, users, courses
+from api import users, courses
 
 from rest_framework.routers import DefaultRouter
 from rest_framework import permissions
@@ -14,7 +14,6 @@ from drf_yasg import openapi
 router = DefaultRouter()
 router.register(r'lessons', courses.LessonsList)
 router.register(r'courses', courses.CoursesList)
-router.register(r'posts', posts.PostsList)
 router.register(r'users', users.UserList, basename='users')
 router.register(r'users_profiles', users.UserProfileClass)
 

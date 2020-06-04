@@ -33,10 +33,12 @@ class UserProfileClass(viewsets.ModelViewSet):
 def search_user(request):
     username = request.data.get("username")
     password = request.data.get("password")
+    
     if User.objects.filter(password=password, username=username).exists():
         user = User.objects.get(password=password, username=username)
         user_profile = UserProfile.objects.get(user=user)
         data = {**UserSerializer(user).data, **UserProfileSerializer(user_profile).data}
+
         return Response(data, status=status.HTTP_200_OK)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)

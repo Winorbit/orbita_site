@@ -12,7 +12,7 @@ def courses(request):
     user = users.user_info(request)
     response = requests.get(endpoints.COURSES_ENDPOINT)
     courses_data = response.json()
-    return render(request, template_adresses.COURSES_PAGE,{'courses':courses_data, "user":user})
+    return render(request, "courses_and_lessons/courses.html",{'courses':courses_data, "user":user})
     pass
 
 def course_lesson(request, course_id, lesson_id):

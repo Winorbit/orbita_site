@@ -20,9 +20,6 @@ class Lesson(BaseTextModel):
 	cours = models.ForeignKey(Course, related_name='course_for_lesson', on_delete=models.CASCADE)
 	pass
 
-class Post(BaseTextModel):
- 	pass
-
 class UserProfile(models.Model):
     profile_image = models.ImageField(upload_to="user_pics", blank=True, null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)

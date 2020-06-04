@@ -13,6 +13,14 @@ def index(request):
     return render(request, "info/index.html")
     pass
 
+def user_info(request):
+    if request.session.get("username") and request.session.get("user_id") and request.session.get("user_courses"):
+        user_info = {"username": request.session.get("username"), 
+                     "user_id": request.session.get("user_id"),
+                     "user_courses": request.session.get("user_courses"),}
+        return user_info
+        pass
+
 def signup(request):
     form = SignUpForm()
     if request.method == 'POST':
@@ -26,10 +34,10 @@ def signup(request):
             elif req.status_code == 409:
                 messages.error(request, 'Такой пользователь уже существует')
                 context = {'form': form}
-                return render(request, "users/registration.html", context)
+                return render(request, "users/register.html", context)
     else:
         context = {'form': form}
-        return render(request,"users/registration.html", context)
+        return render(request,"users/register.html", context)
 
 def login(request):
     if request.method == 'POST':
@@ -37,7 +45,7 @@ def login(request):
         if form.is_valid():
             check_user = requests.post("http://127.0.0.1:8000/search_user", data = form.cleaned_data)
             if check_user.status_code == 200:
-                common_funcs.write_into_session(request,**check_user.json())
+                sessions.write_into_session(request,**check_user.json())
                 return HttpResponseRedirect('/my_cabinet')
             else:
                 messages.info(request, 'Чет не то вводишь, человек.')
@@ -50,14 +58,14 @@ def login(request):
 
 def user_logout(request):
     logout(request)
-    return render(request, "template_adresses.INDEX_PAGE")
+    return render(request, "info/index.html")
 
 def user_cabinet(request):
     username = request.session.get("username")
     user_id = request.session.get("user_id")
     if username and user_id:
         user_courses = request.session.get("user_courses")
-        return render(request, template_adresses.USER_CABINET_PAGE, {'available_courses':user_courses})
+        return render(request, "users/user_cabinet.html", {'available_courses':user_courses})
     else:
         return HttpResponseRedirect("/enter")
         pass
