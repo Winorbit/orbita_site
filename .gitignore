@@ -1,2 +1,8 @@
 /.env
 /nginx/logs/
+.idea/
+.vscode/
+web_api/.vscode/
+web_ui/.vscode/
+web_ui/db.sqlite3
+.gitignore
