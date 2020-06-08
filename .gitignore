@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /.env
 /nginx/logs/
 .idea/
@@ -6,3 +7,19 @@ web_api/.vscode/
 web_ui/.vscode/
 web_ui/db.sqlite3
 .gitignore
+=======
+.env
+/nginx/logs/
+.idea/
+.vscode/*
+.gitignore
+web_ui/db.sqlite3
+web_api/.vscode/
+web_ui/.vscode/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+>>>>>>> 7dcbae514c66fafdf128fb5debf48d6c4fd23da1
