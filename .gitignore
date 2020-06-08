@@ -1,2 +1,14 @@
-/.env
+.env
 /nginx/logs/
+.idea/
+.vscode/*
+.gitignore
+web_ui/db.sqlite3
+web_api/.vscode/
+web_ui/.vscode/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
