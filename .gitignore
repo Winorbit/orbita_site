@@ -1,25 +1,16 @@
-<<<<<<< HEAD
-/.env
-/nginx/logs/
-.idea/
-.vscode/
-web_api/.vscode/
-web_ui/.vscode/
-web_ui/db.sqlite3
-.gitignore
-=======
 .env
-/nginx/logs/
 .idea/
 .vscode/*
-.gitignore
-web_ui/db.sqlite3
+/nginx/logs/
 web_api/.vscode/
 web_ui/.vscode/
+web_ui/deployment/
+web_ui/db.sqlite3
+web_ui/webui/local_endpoints.py
 
 # Byte-compiled / optimized / DLL files
+web_api/__pycache__/
+web_ui/__pycache__/
 __pycache__/
 *.py[cod]
 *$py.class
-
->>>>>>> 7dcbae514c66fafdf128fb5debf48d6c4fd23da1
