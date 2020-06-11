@@ -9,9 +9,11 @@ from .forms import SignUpForm, LoginForm, EditProfile
 from . import endpoints
 from . import sessions
 
+
 def index(request):
-    return render(request, "info/index.html")
+    return render(request, "webui/index.html")
     pass
+
 
 def user_info(request):
     if request.session.get("username") and request.session.get("user_id") and request.session.get("user_courses"):
@@ -20,6 +22,7 @@ def user_info(request):
                      "user_courses": request.session.get("user_courses"),}
         return user_info
         pass
+
 
 def signup(request):
     form = SignUpForm()
@@ -34,10 +37,11 @@ def signup(request):
             elif req.status_code == 409:
                 messages.error(request, 'Такой пользователь уже существует')
                 context = {'form': form}
-                return render(request, "users/register.html", context)
+                return render(request, "webui/users/signup.html", context)
     else:
         context = {'form': form}
-        return render(request,"users/register.html", context)
+        return render(request,"webui/users/signup.html", context)
+
 
 def login(request):
     if request.method == 'POST':
@@ -50,25 +54,28 @@ def login(request):
             else:
                 messages.info(request, 'Чет не то вводишь, человек.')
                 context={}
-                return render(request, "users/login.html", context) 
+                return render(request, "webui/users/login.html", context) 
     else:
         form = LoginForm()
-        return render(request, "users/login.html", {'form': form})
+        return render(request, "webui/users/login.html", {'form': form})
         pass
+
 
 def user_logout(request):
     logout(request)
     return render(request, "info/index.html")
+
 
 def user_cabinet(request):
     username = request.session.get("username")
     user_id = request.session.get("user_id")
     if username and user_id:
         user_courses = request.session.get("user_courses")
-        return render(request, "users/user_cabinet.html", {'available_courses':user_courses})
+        return render(request, "webui/users/user_cabinet.html", {'available_courses':user_courses})
     else:
         return HttpResponseRedirect("/enter")
         pass
+
 
 def edit_profile(request):
     if request.method == 'POST':

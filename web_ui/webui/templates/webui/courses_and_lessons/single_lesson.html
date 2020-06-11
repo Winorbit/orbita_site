@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Занятие  {{lesson_data.title}}
+
+{% endblock %}
+{% block content %}
+
+
+
+
+
+
+
+<artice class="art">
+{{lesson_data.title}}
+</artice>
+
+<br>
+<section class="lection">
+{{lesson_data.description}} 
+</section>
+
+{{lesson_data.content}} 
+
+
+{% endblock %}

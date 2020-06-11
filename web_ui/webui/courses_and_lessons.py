@@ -12,7 +12,7 @@ def courses(request):
     user = users.user_info(request)
     response = requests.get(endpoints.COURSES_ENDPOINT)
     courses_data = response.json()
-    return render(request, "courses_and_lessons/courses.html",{'courses':courses_data, "user":user})
+    return render(request, "webui/courses_and_lessons/courses.html",{'courses':courses_data, "user":user})
     pass
 
 def course_lesson(request, course_id, lesson_id):
@@ -54,7 +54,7 @@ def single_course(request, id):
                     user = users.user_info(request)
                     course_data = requests.get(f"{endpoints.SINGLE_COURSE_ENDPOINT}/{id}").json()
                     return render(request, template_adresses.SINGLE_COURSE_PAGE, {'course_data':course_data, "user_info":user})
-        return render(request, template_adresses.SINGLE_COURSE_PAGE)
+        return render(request, endpoints.SINGLE_COURSE_PAGE)
 
     if request.method == 'GET':
         if users.user_info(request):
@@ -63,5 +63,5 @@ def single_course(request, id):
             user = None
         response = requests.get(f"{endpoints.SINGLE_COURSE_ENDPOINT}/{id}")
         course_data = response.json()
-        return render(request, template_adresses.SINGLE_COURSE_PAGE, {'course_data':course_data, "user_info":user})
+        return render(request, "webui/courses_and_lessons/single_course.html", {'course_data':course_data, "user_info":user})
         pass
