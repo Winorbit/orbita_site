@@ -4,9 +4,9 @@ ENV PYTHONUNBUFFERED 1
 
 RUN /usr/local/bin/python -m pip install --upgrade pip
 
-WORKDIR /home/web_ui/
+WORKDIR /home/web_api/
 
-COPY Pipfile* /home/web_ui/
+COPY Pipfile* /home/web_api/
 
 RUN pip install pipenv && pipenv install --system
 
