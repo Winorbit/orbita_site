@@ -4,7 +4,7 @@
 logs/
 deployment/
 db.sqlite3
-web_ui/webui/local_endpoints.py
+local_endpoints.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__
