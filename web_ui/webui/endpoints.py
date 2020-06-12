@@ -4,7 +4,7 @@ HOST = "http://web-api"
 PORT = PORT_API
 
 try:
-    from .local_endpoints import *
+    from . local_endpoints import *
 except ImportError:
     pass
 
