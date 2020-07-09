@@ -11,8 +11,8 @@ from django.contrib.auth import logout
 from django.contrib import messages
 
 from .forms import SignUpForm, LoginForm, EditProfile, ChangePassForm, RestoreForm
-from . import endpoints
-from . import sessions
+from webui.endpoints import *
+from webui.sessions import *
 
 max_diff = 86400
 
@@ -35,7 +35,7 @@ def signup(request):
     if request.method == 'POST':
         form = SignUpForm(data=request.POST)
         if form.is_valid():
-            req = requests.post("http://127.0.0.1:8000/users/", data=form.cleaned_data)
+            req = requests.post(f"{USERS_ENDPOINT}/", data=form.cleaned_data)
             if req.status_code == 201:
                 user = form.cleaned_data.get('username')
                 messages.success(request, f'{user}, для тебя был создан аккаунт, авторизуйся')
@@ -52,9 +52,9 @@ def login(request):
     if request.method == 'POST':
         form = LoginForm(data=request.POST)
         if form.is_valid():
-            check_user = requests.post("http://127.0.0.1:8000/search_user", data = form.cleaned_data)
+            check_user = requests.post(f"{CONTENT_URL}/search_user", data = form.cleaned_data)
             if check_user.status_code == 200:
-                sessions.write_into_session(request,**check_user.json())
+                write_into_session(request,**check_user.json())
                 return HttpResponseRedirect('/my_cabinet')
             else:
                 messages.info(request, 'Чет не то вводишь, человек.')
@@ -74,7 +74,7 @@ def user_cabinet(request):
     user_id = request.session.get("user_id")
     if username and user_id:
         user_courses = request.session.get("user_courses")
-        courses_req = requests.get("http://127.0.0.1:8000/courses")
+        courses_req = requests.get(f"{SINGLE_COURSE_ENDPOINT}")
         if courses_req.status_code == 200:
             available_courses = [x for x in courses_req.json() if x["id"] in user_courses]
             return render(request, "users/user_cabinet.html", {'available_courses':available_courses})
@@ -91,7 +91,7 @@ def edit_profile(request):
             form = EditProfile(data=request.POST)
             if form.is_valid():
                 form_data = form.cleaned_data
-                user_req = requests.get(f"http://127.0.0.1:8000/users/{session_info['user_id']}")
+                user_req = requests.get(f"{USERS_ENDPOINT}/{session_info['user_id']}")
                 if user_req.status_code == 200:
                     user_info = user_req.json()
                 else:
@@ -124,10 +124,10 @@ def edit_profile(request):
                 else:
                     raise Exception("FORM IS EMPTY!!!!")
                 
-                upd_res = requests.put(f"http://127.0.0.1:8000/users/{session_info['user_id']}/", data=user_info)
+                upd_res = requests.put(f"{USERS_ENDPOINT}/{session_info['user_id']}/", data=user_info)
                
                 if upd_res.status_code == 200:
-                    user = requests.get(f"http://127.0.0.1:8000/users/{session_info['user_id']}")
+                    user = requests.get(f"{USERS_ENDPOINT}/{session_info['user_id']}")
                     if request.session["username"] != user.json()["username"]:
                         request.session["username"] = user.json()["username"]
                         request.session.modified = True
@@ -157,7 +157,7 @@ def generate_restore_link(datetime:int, user_email:str, user_id:int):
     encoded_datetime = encode_str_to_number(str(datetime))
     encoded_email = encode_str_to_number(user_email)
     uuid_token = str(uuid.uuid4())
-    restore_link = f"{endpoints.HOST}:{endpoints.PORT}/change_password/{uuid_token}/{encoded_datetime}/{encoded_email}/{user_id}"
+    restore_link = f"{CONTENT_URL}/change_password/{uuid_token}/{encoded_datetime}/{encoded_email}/{user_id}"
     return restore_link
     pass
 
@@ -198,7 +198,7 @@ def restore_access(request):
         if form.is_valid():
             form_data = form.cleaned_data
             user_email = form_data["user_email"]
-            res_user_by_email = requests.post("http://127.0.0.1:8000/search_user_by_email", data={"email": user_email})
+            res_user_by_email = requests.post("{CONTENT_URL}/search_user_by_email", data={"email": user_email})
             if res_user_by_email.status_code == 200:
                 user = res_user_by_email.json()
                 user_id = user["id"]
@@ -236,12 +236,12 @@ def change_pass(request, uuid, encoded_datetime, encoded_email, user_id):
         now_in_secs = int(datetime.now().strftime("%s"))
         
         if check_expire(now_in_secs, int(restore_request_datetime)):
-            res_user = requests.get(f"http://127.0.0.1:8000/users/{user_id}")
+            res_user = requests.get(f"{USERS_ENDPOINT}/{user_id}")
             if res_user.status_code == 200:
                 user_info = res_user.json()
                 if "email" in user_info.keys():
                     data = {"username": user_info["username"], "password": new_pass}
-                    upd_res = requests.put(f"http://127.0.0.1:8000/users/{user_id}/", data=data)
+                    upd_res = requests.put(f"{USERS_ENDPOINT}/{user_id}/", data=data)
                     if upd_res.status_code == 200:
                         return redirect("/login") 
                     else:

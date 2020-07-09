@@ -1,12 +1,11 @@
 import os
-PORT_API = os.environ.get('PORT_API')
+PORT = os.environ.get('PORT_API')
 HOST = "http://web-api"
-PORT = PORT_API
 
-# try:
-#     from .local_endpoints import *
-# except ImportError:
-#     pass
+try:
+    from .local_endpoints import *
+except ImportError:
+    pass
 
 # ENDPOINTS CONTENT ADRESSES
 
