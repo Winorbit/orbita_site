@@ -1,34 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Login page</title>
-</head>
-<body>
-    {% block title %}Log-in{% endblock %}
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Login{% endblock %}
+
 {% block content %}
-    <h1>Log-in</h1>
+  <p> Войти или <a href="/signup">Зарегестрироваться</a></p>
+
     {% if form.errors %}
         <p>
-            Your username and password didn't match.
-            Please try again.
+	Введенные вами данные не соответствуют существующему профилю, попробкуйте еще раз или же запросите востановление доступа
         </p>
-    {% else %}
-        <p>Please, use the following form to log-in:</p>
     {% endif %}
     <div class="login-form">
         <form action="{% url 'webui:login' %}" method="post">
             {{ form.as_p }}
             {% csrf_token %}
             <input type="hidden" name="next" value="{{ next }}"/>
-            <p><input type="submit" value="Log-in"></p>
+            <p><input type="submit" value="Войти"></p>
         </form>
+	<a href="/restore_access"> Забыли логин и/или пароль?</a>
     </div>
 {% endblock %}
-</body>
-</html>
 
-
-<html>
