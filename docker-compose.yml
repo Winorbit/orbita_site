@@ -5,7 +5,7 @@ services:
         restart: always
         expose:
             - ${PORT_API}
-        command: gunicorn --reload -w 4  -b :${PORT_API} --env DJANGO_SETTINGS_MODULE=content.settings content.wsgi
+        command: gunicorn --reload -w 4  -b :${PORT_API} --env DJANGO_SETTINGS_MODULE=settings.dev wsgi
         volumes:
             - ./web_api/:/home/orbita_site/web_api
             
@@ -14,7 +14,7 @@ services:
         restart: always
         expose:
             - ${PORT_UI}
-        command: gunicorn --reload -w 4  -b :${PORT_UI} --env DJANGO_SETTINGS_MODULE=Orbit.settings Orbit.wsgi
+        command: gunicorn --reload -w 4  -b :${PORT_UI} --env DJANGO_SETTINGS_MODULE=settings wsgi
         volumes:
             - ./web_ui/:/home/web_ui
         environment: 
