@@ -9,16 +9,6 @@ SECRET_KEY = 'tob9j%nc_2=!*)*h2==&gt7%y%wjvq+h6g%l4@)fp2a@qd_=u*'
 
 ALLOWED_HOSTS = ['31.131.28.206', 'web-api', '127.0.0.1', '0.0.0.0']
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'orbit_test_db',
-#         'USER' : 'orbit_test_user',
-#         'PASSWORD' : 'test_password',
-#         'HOST' : '31.131.28.206',
-#         'PORT' : '5432'
-#     },
-# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',

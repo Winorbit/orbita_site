@@ -3,14 +3,17 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # Set work directory
-WORKDIR /code
+WORKDIR /home/web_api
 
 # Install dependencies
 RUN pip install pipenv
-COPY Pipfile Pipfile.lock /code/
+COPY Pipfile* /home/web_api/
 RUN pipenv install --system
 # Copy project
-COPY . /code/
+COPY . /home/web_api/
+RUN chmod +x /home/web_api/entrypoint.sh
+
+ENTRYPOINT [ "/home/web_api/entrypoint.sh" ]
 
 EXPOSE 8000
 
