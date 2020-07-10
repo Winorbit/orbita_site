@@ -1,14 +1,18 @@
 .env
+.idea
+.vscode
+logs/
+deployment/
 /nginx/logs/
-.idea/
-.vscode/*
-.gitignore
+db.sqlite3
+local_endpoints.py
 web_ui/db.sqlite3
 web_api/.vscode/
 web_ui/.vscode/
 
 # Byte-compiled / optimized / DLL files
-__pycache__/
+web_ui/__pycache__/
+web_api/__pycache__/
+__pycache__
 *.py[cod]
 *$py.class
-

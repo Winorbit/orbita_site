@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} Востановить доступ {% endblock %}
+
+{% block content %}
+    <div class="restore-form">
+        <form action="{% url 'webui:restore_access' %}" method="post">
+            {{access_form.as_p }}
+            {% csrf_token %}
+            <input type="hidden" name="restore_access" value="{{ next }}"/>
+            <p><input type="submit" value="restore"></p>
+        </form>
+    </div>
+{% endblock %}
