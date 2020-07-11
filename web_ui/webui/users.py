@@ -257,5 +257,3 @@ def change_pass(request, uuid, encoded_datetime, encoded_email, user_id):
         context = {'restore_form': form, "encoded_datetime":encoded_datetime, "encoded_email":encoded_email, "user_id":user_id,"uuid":uuid}
         return render(request,"users/change_pass.html", context)
         pass
-
-

@@ -1,13 +1,9 @@
 import os
 PORT = os.environ.get('PORT_API')
-HOST = "http://web-api"
+HOST = os.environ.get('API_HOST')
 
-try:
+if not PORT and HOST:
     from .local_endpoints import *
-except ImportError:
-    pass
-
-# ENDPOINTS CONTENT ADRESSES
 
 CONTENT_URL = f"{HOST}:{PORT}"
 COURSES_ENDPOINT = f'{CONTENT_URL}/courses'

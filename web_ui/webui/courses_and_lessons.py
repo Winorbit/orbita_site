@@ -8,12 +8,16 @@ from . import sessions
 
 import requests
 
+OK_CODES = (200, 201, 202, 203, 204, 205, 206)
+
 def courses(request):
     user = users.session_user_info(request)
-    response = requests.get(endpoints.COURSES_ENDPOINT)
-    courses_data = response.json()
-    return render(request, "courses_and_lessons/courses.html",{'courses':courses_data, "user":user})
-    pass
+    res = requests.get(f"{endpoints.COURSES_ENDPOINT}")
+    if res.status_code in OK_CODES:
+        courses_data = res.json()
+        return render(request, "courses_and_lessons/courses.html",{'courses':courses_data, "user":user})
+    else:
+        raise Exception(f"Some troubles with request - {req.status_code}")
 
 def course_lesson(request, course_id, lesson_id):
     if users.session_user_info(request):

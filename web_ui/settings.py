@@ -1,5 +1,6 @@
 import os
 
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = 'ozjvkcp2(tg)bzgahcuq^xm+5f&0j-e9$5uwc+$zmm$%t-8d!+'
@@ -7,11 +8,9 @@ SECRET_KEY = 'ozjvkcp2(tg)bzgahcuq^xm+5f&0j-e9$5uwc+$zmm$%t-8d!+'
 DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1','0.0.0.0',"31.131.28.206", "webapi","webapi:8000"]
-# ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
- #   'send_email.apps.SendEmailConfig',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -25,8 +24,6 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'winorbita@gmail.com'
 EMAIL_HOST_PASSWORD = '+sh52!fiv'
-# DEFAULT_FROM_EMAIL = 'Your name'
-# DEFAULT_TO_EMAIL = 'Your email'
 DEFAULT_MAIL_NAME = "winorbita"
 
 MIDDLEWARE = [
@@ -82,7 +79,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 
 LANGUAGE_CODE = 'ru-ru'
