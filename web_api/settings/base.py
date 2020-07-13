@@ -4,46 +4,6 @@ import psycopg2
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = 'tob9j%nc_2=!*)*h2==&gt7%y%wjvq+h6g%l4@)fp2a@qd_=u*'
-
-DEBUG = True
-
-ALLOWED_HOSTS = ['127.0.0.1','0.0.0.0',"31.131.28.206"]
-
-ALLOWED_HOSTS = ["*"]
-
-
-remoted_db = {'ENGINE': 'django.db.backends.postgresql_psycopg2',
-             'NAME': 'orbit_test_db',
-             'USER' : 'orbit_test_user',
-             'PASSWORD' : 'test_password',
-             'HOST' : '31.131.28.206',
-             'PORT' : '5432'}
-
-local_db = { 'ENGINE': 'django.db.backends.postgresql_psycopg2',
-             'NAME': 'winorbite_alpha',
-             'USER' : 'winorbite',
-             'PASSWORD' : 'password',
-             'HOST' : '127.0.0.1',
-             'PORT' : '5432'}
-
-
-TEST_CONN_PARAMS = {"user": "orbit_test_user", "password": "test_password",  "host": "31.131.28.206" , "port": "5432",  "database": "orbit_test_db"}
-
-def check_remote_conn(db_conn_params):
-    conn = psycopg2.connect(**db_conn_params)
-    if conn:
-        return True
-    else:
-        return False
-
-def choice_default_db():
-    if check_remote_conn(TEST_CONN_PARAMS):
-        return remoted_db
-    else:
-        return local_db
-        pass
-    
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -87,7 +47,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'wsgi.application'
 
-DATABASES = {'default': choice_default_db()}
+DATABASES = {
+    
+}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -106,7 +68,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'ru-ru'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 

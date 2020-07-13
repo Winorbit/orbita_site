@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+  <p> Войти или <a href="/signup">Зарегестрироваться</a></p>
+
+    {% if form.errors %}
+        <p>
+	Введенные вами данные не соответствуют существующему профилю, попробкуйте еще раз или же запросите востановление доступа
+        </p>
+    {% endif %}
+    <div class="login-form">
+        <form action="{% url 'webui:login' %}" method="post">
+            {{ form.as_p }}
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}"/>
+            <p><input type="submit" value="Войти"></p>
+        </form>
+	<a href="/restore_access"> Забыли логин и/или пароль?</a>
+    </div>
+{% endblock %}
+

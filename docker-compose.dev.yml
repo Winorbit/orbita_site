@@ -3,29 +3,22 @@ services:
     web-api:
         build: ./web_api
         restart: always
-        expose:
-            - ${PORT_API}
-<<<<<<< HEAD
-        command: gunicorn --reload -w 4  -b :${PORT_API} --env DJANGO_SETTINGS_MODULE=content.settings content.wsgi
+        ports:
+            - ${PORT_API}:${PORT_API}
+        command: gunicorn --reload -w 4  -b :${PORT_API} --env DJANGO_SETTINGS_MODULE=settings.${COMPOSE_PROJECT_NAME} wsgi
         volumes:
             - ./web_api/:/home/web_api
-=======
-        command: gunicorn --reload -w 4  -b :${PORT_API} --env DJANGO_SETTINGS_MODULE=settings.${COMPOSE_PROJECT_NAME} wsgi
->>>>>>> release
             
     web-ui:
         build: ./web_ui
         restart: always
-        expose:
-            - ${PORT_UI}
+        ports:
+            - ${PORT_UI}:${PORT_UI}
         command: gunicorn --reload -w 4  -b :${PORT_UI} --env DJANGO_SETTINGS_MODULE=settings wsgi
-<<<<<<< HEAD
         volumes:
             - ./web_ui/:/home/web_ui
-=======
->>>>>>> release
-        environment: 
-            - PORT_API
+        env_file:
+        - .env
         depends_on:
             - web-api
 

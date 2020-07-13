@@ -4,10 +4,14 @@ ENV PYTHONUNBUFFERED 1
 
 RUN /usr/local/bin/python -m pip install --upgrade pip
 
-WORKDIR /home/web_ui/
+WORKDIR /home/web_ui
 
 COPY Pipfile* /home/web_ui/
 
 RUN pip install pipenv && pipenv install --system
+
+COPY . /home/web_ui/
+
+RUN ./manage.py migrate
 
 EXPOSE 8001

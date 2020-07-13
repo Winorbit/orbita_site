@@ -42,3 +42,15 @@ def search_user(request):
         return Response(data, status=status.HTTP_200_OK)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['POST'])
+def search_user_by_email(request):
+    email = request.data.get("email")
+    
+    if User.objects.filter(email=email).exists():
+        user = User.objects.get(email=email)
+        data = {**UserSerializer(user).data}
+
+        return Response(data, status=status.HTTP_200_OK)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)

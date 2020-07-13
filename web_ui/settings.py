@@ -1,13 +1,12 @@
 import os
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = 'ozjvkcp2(tg)bzgahcuq^xm+5f&0j-e9$5uwc+$zmm$%t-8d!+'
 
 DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1','0.0.0.0',"31.131.28.206", "webapi","webapi:8000"]
-# ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -18,6 +17,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'webui',
 ]
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'winorbita@gmail.com'
+EMAIL_HOST_PASSWORD = '+sh52!fiv'
+DEFAULT_MAIL_NAME = "winorbita"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
