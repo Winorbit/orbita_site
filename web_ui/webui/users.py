@@ -18,7 +18,7 @@ max_diff = 86400
 
 
 def index(request):
-    return render(request, "webui/index.html")
+    return render(request, "info/index.html")
     pass
 
 def session_user_info(request):

@@ -11,7 +11,7 @@ import requests
 OK_CODES = (200, 201, 202, 203, 204, 205, 206)
 
 def courses(request):
-   user = users.session_user_info(request)
+    user = users.session_user_info(request)
     res = requests.get(f"{endpoints.COURSES_ENDPOINT}")
     if res.status_code in OK_CODES:
         courses_data = res.json()
