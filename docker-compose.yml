@@ -4,7 +4,7 @@ services:
         build: ./web_api
         restart: always
         ports:
-            - ${PORT_API}
+            - ${PORT_API}:${PORT_API}
         command: gunicorn --reload -w 4  -b :${PORT_API} --env DJANGO_SETTINGS_MODULE=settings.${COMPOSE_PROJECT_NAME} wsgi
             
     web-ui:
