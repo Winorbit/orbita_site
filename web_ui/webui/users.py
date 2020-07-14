@@ -44,10 +44,10 @@ def signup(request):
             elif req.status_code == 409:
                 messages.error(request, 'Такой пользователь уже существует')
                 context = {'form': form}
-                return render(request, "webui/users/signup.html", context)
+                return render(request, "users/signup.html", context)
     else:
         context = {'form': form}
-        return render(request,"webui/users/signup.html", context)
+        return render(request,"users/signup.html", context)
 
 def login(request):
     if request.method == 'POST':
@@ -60,10 +60,10 @@ def login(request):
             else:
                 messages.info(request, 'Чет не то вводишь, человек.')
                 context={}
-                return render(request, "webui/users/login.html", context) 
+                return render(request, "users/login.html", context) 
     else:
         form = LoginForm()
-        return render(request, "webui/users/login.html", {'form': form})
+        return render(request, "users/login.html", {'form': form})
         pass
 
 def user_logout(request):
