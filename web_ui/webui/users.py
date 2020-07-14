@@ -44,10 +44,10 @@ def signup(request):
             elif req.status_code == 409:
                 messages.error(request, 'Такой пользователь уже существует')
                 context = {'form': form}
-                return render(request, "webui/users/signup.html", context)
+                return render(request, "users/signup.html", context)
     else:
         context = {'form': form}
-        return render(request,"webui/users/signup.html", context)
+        return render(request,"users/signup.html", context)
 
 def login(request):
     if request.method == 'POST':
@@ -60,10 +60,10 @@ def login(request):
             else:
                 messages.info(request, 'Чет не то вводишь, человек.')
                 context={}
-                return render(request, "webui/users/login.html", context) 
+                return render(request, "users/login.html", context) 
     else:
         form = LoginForm()
-        return render(request, "webui/users/login.html", {'form': form})
+        return render(request, "users/login.html", {'form': form})
         pass
 
 def user_logout(request):
@@ -97,7 +97,7 @@ def edit_profile(request):
                     user_info = user_req.json()
                 else:
                     raise Exception(f"Request is failed with status {user_req.status_code}")
-                
+
                 if form_data:
 
                     if form_data["new_password"] and form_data["old_password"]:
@@ -108,14 +108,14 @@ def edit_profile(request):
                             user_info["password"] = new_pass
                         else:
                             raise Exception("NEW PASSWORD IS EQUAL WITH CURRENT")
-                    
+
                     if form_data["new_name"]:
                         new_name = form_data['new_name']
                         if new_name != user_info["username"]:
                             user_info["username"] = new_name
                         else:
                             raise Exception("NEW NAME IS EQUAL CURRENT NAME")
-                    
+
                     if form_data["new_email"]:
                         new_email = form_data["new_email"]
                         if new_email != user_info["email"]:
