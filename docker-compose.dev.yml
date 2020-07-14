@@ -6,8 +6,8 @@ services:
         ports:
             - ${PORT_API}:${PORT_API}
         command: gunicorn --reload -w 4  -b :${PORT_API} --env DJANGO_SETTINGS_MODULE=settings.${COMPOSE_PROJECT_NAME} wsgi
-        volumes:
-            - ./web_api/:/home/web_api
+        env_file:
+            - .env
             
     web-ui:
         build: ./web_ui
@@ -15,12 +15,10 @@ services:
         ports:
             - ${PORT_UI}:${PORT_UI}
         command: gunicorn --reload -w 4  -b :${PORT_UI} --env DJANGO_SETTINGS_MODULE=settings wsgi
-        volumes:
-            - ./web_ui/:/home/web_ui
-        env_file:
-        - .env
         depends_on:
             - web-api
+        env_file:
+            - .env
 
     nginx:
         image: nginx:alpine
