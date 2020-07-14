@@ -6,6 +6,8 @@ services:
         ports:
             - ${PORT_API}:${PORT_API}
         command: gunicorn --reload -w 4  -b :${PORT_API} --env DJANGO_SETTINGS_MODULE=settings.${COMPOSE_PROJECT_NAME} wsgi
+        volumes: 
+            - ./web_api/deploy_static/:/home/web_api/deploy_static/
         env_file:
             - .env
 
@@ -26,6 +28,7 @@ services:
         volumes: 
             - ./nginx/nginx.conf.template:/nginx.conf.template
             - ./nginx/logs/:/var/log/nginx
+            - ./web_api/deploy_static/:/static
         ports:
             - ${PORT_NGINX}:80
         environment: 

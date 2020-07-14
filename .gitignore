@@ -7,6 +7,7 @@ local_endpoints.py
 
 # Byte-compiled / optimized / DLL files
 nginx/logs
+web_api/deploy_static/
 web_ui/__pycache__
 web_api/__pycache__
 __pycache__
