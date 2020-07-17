@@ -4,21 +4,14 @@ ENV PYTHONUNBUFFERED 1
 
 RUN /usr/local/bin/python -m pip install --upgrade pip
 
-# Set work directory
 WORKDIR /home/web_api/
 
-# Install dependencies
-RUN pip install pipenv
 COPY Pipfile* /home/web_api/
-RUN pipenv install --system
-# Copy project
+
+RUN pip install --no-cache-dir pipenv && pipenv install --deploy --system
+
 COPY . /home/web_api/
+
 RUN chmod +x /home/web_api/entrypoint.sh
 
 ENTRYPOINT [ "/home/web_api/entrypoint.sh" ]
-
-COPY Pipfile* /home/web_api/
-
-RUN pip install pipenv && pipenv install --system
-
-EXPOSE 8000

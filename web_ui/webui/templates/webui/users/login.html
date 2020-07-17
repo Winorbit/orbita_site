@@ -1,0 +1,78 @@
+{% extends 'webui/base.html' %}
+{% comment %} <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Login page</title>
+</head>
+<body>
+    {% block title %}Log-in{% endblock %}
+{% block content %}
+    <h1>Log-in</h1>
+    {% if form.errors %}
+        <p>
+            Your username and password didn't match.
+            Please try again.
+        </p>
+    {% else %}
+        <p>Please, use the following form to log-in:</p>
+    {% endif %}
+    <div class="login-form">
+        <form action="{% url 'webui:login' %}" method="post">
+            {{ form.as_p }}
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}"/>
+            <p><input type="submit" value="Log-in"></p>
+        </form>
+    </div>
+{% endblock %}
+</body>
+</html>
+
+
+<html> {% endcomment %}
+
+
+{% block title %}<title>Авторизация</title>{% endblock %}
+
+{% block content %}
+<div class="container h-100">
+    <div class="d-flex justify-content-center h-100">
+        <div class="user_card">
+            <div class="d-flex justify-content-center">
+                <h3 id="form-title">Авторизация</h3>
+            </div>
+            <div class="d-flex justify-content-center form_container">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="input-group mb-3">
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        </div>
+                        <input type="text" name="username" placeholder="Имя..." class="form-control">
+                    </div>
+                    <div class="input-group mb-2">
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="fas fa-key"></i></span>
+                        </div>
+                        <input type="password" name="password" placeholder="Пароль..." class="form-control">
+                    </div>
+                    <div class="d-flex justify-content-center mt-3 login_container">
+                        <input class="btn login_btn" type="submit" value="Заполни и клацай">
+                    </div>
+                </form>
+            </div>
+            {% for message in messages %}
+                <p id="messages">{{message}}</p>
+            {% endfor %}
+            <div class="mt-4">
+                <div class="d-flex justify-content-center links">
+                    Ты разве зареган? <a href="{% url 'orbita:register' %}" class="ml-2">Регистрация</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

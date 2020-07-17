@@ -5,9 +5,7 @@ services:
         restart: always
         ports:
             - ${PORT_API}:${PORT_API}
-        command: gunicorn --reload -w 4  -b :${PORT_API} --env DJANGO_SETTINGS_MODULE=settings.${COMPOSE_PROJECT_NAME} wsgi
-        volumes: 
-            - ./web_api/deploy_static/:/home/web_api/deploy_static/
+        command: gunicorn --reload -w 4  -b :${PORT_API} wsgi
         env_file:
             - .env
 
@@ -16,7 +14,9 @@ services:
         restart: always
         expose:
             - ${PORT_UI}
-        command: gunicorn --reload -w 4  -b :${PORT_UI} --env DJANGO_SETTINGS_MODULE=settings wsgi
+        command: bash -c "python manage.py collectstatic --noinput && gunicorn --reload -w 4  -b :${PORT_UI} --env DJANGO_SETTINGS_MODULE=settings wsgi"
+        volumes: 
+            - ./web_ui/deploy_static/:/home/web_ui/deploy_static/
         env_file:
             - .env
         depends_on:
@@ -28,7 +28,7 @@ services:
         volumes: 
             - ./nginx/nginx.conf.template:/nginx.conf.template
             - ./nginx/logs/:/var/log/nginx
-            - ./web_api/deploy_static/:/static
+            - ./web_ui/deploy_static/:/staticfiles
         ports:
             - ${PORT_NGINX}:80
         environment: 

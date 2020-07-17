@@ -15,9 +15,9 @@ def courses(request):
     res = requests.get(f"{endpoints.COURSES_ENDPOINT}")
     if res.status_code in OK_CODES:
         courses_data = res.json()
-        return render(request, "courses_and_lessons/courses.html",{'courses':courses_data, "user":user})
+        return render(request, "webui/courses_and_lessons/courses.html",{'courses':courses_data, "user":user})
     else:
-        raise Exception(f"Some troubles with request - {req.status_code}")
+        raise Exception(f"Some troubles with request - {res.status_code}")
 
 def course_lesson(request, course_id, lesson_id):
     if users.session_user_info(request):

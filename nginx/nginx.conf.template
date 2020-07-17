@@ -12,8 +12,19 @@ server {
     }
 
     location /static/ {
-        alias /static/;
+        autoindex on;
+        alias /staticfiles/;
     }
 
+    location = /nginx_status {
+        stub_status on;
+        access_log off;
+        allow 127.0.0.1;
+        deny all;
+    }
+
+    location = /favicon.ico {
+        alias /static/img/favicon.png;
+    }
 }
 

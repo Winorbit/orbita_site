@@ -1,12 +1,12 @@
 import os
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 SECRET_KEY = 'ozjvkcp2(tg)bzgahcuq^xm+5f&0j-e9$5uwc+$zmm$%t-8d!+'
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','0.0.0.0',"31.131.28.206", "webapi","webapi:8000"]
+ALLOWED_HOSTS = ['127.0.0.1','0.0.0.0',"31.131.28.206", "web-api"]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -88,12 +88,12 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'deployment', 'collected_static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'deploy_static')
 
 # MEDIA_URL = "/media/"
 # MEDIA_ROOT = os.path.join(BASE_DIR, "deployment", "media")
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
+    os.path.join(BASE_DIR, 'static'),
 ]
 

@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework import status, viewsets
 
 class UserList(viewsets.ModelViewSet):
-    queryset = User.objects.all()
+    queryset = User.objects.all().order_by('-id')
     serializer_class = UserSerializer
 
     def create(self, request):
@@ -26,7 +26,7 @@ class UserList(viewsets.ModelViewSet):
             return Response(status=status.HTTP_409_CONFLICT)
 
 class UserProfileClass(viewsets.ModelViewSet):
-    queryset = UserProfile.objects.all()
+    queryset = UserProfile.objects.all().order_by('-id')
     serializer_class = UserProfileSerializer
     
 @api_view(['POST'])

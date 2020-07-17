@@ -1,6 +1,7 @@
 import requests
 import math
 import uuid
+import json
 from settings import DEFAULT_MAIL_NAME
 from datetime import datetime
 
@@ -18,7 +19,7 @@ max_diff = 86400
 
 
 def index(request):
-    return render(request, "info/index.html")
+    return render(request, "webui/info/index.html")
     pass
 
 def session_user_info(request):
@@ -47,7 +48,7 @@ def signup(request):
                 return render(request, "users/signup.html", context)
     else:
         context = {'form': form}
-        return render(request,"users/signup.html", context)
+        return render(request,"webui/users/signup.html", context)
 
 def login(request):
     if request.method == 'POST':
@@ -60,15 +61,15 @@ def login(request):
             else:
                 messages.info(request, 'Чет не то вводишь, человек.')
                 context={}
-                return render(request, "users/login.html", context) 
+                return render(request, "webui/users/login.html", context) 
     else:
         form = LoginForm()
-        return render(request, "users/login.html", {'form': form})
+        return render(request, "webui/users/login.html", {'form': form})
         pass
 
 def user_logout(request):
     logout(request)
-    return render(request, "info/index.html")
+    return render(request, "webui/info/index.html")
 
 def user_cabinet(request):
     username = request.session.get("username")
@@ -77,8 +78,9 @@ def user_cabinet(request):
         user_courses = request.session.get("user_courses")
         courses_req = requests.get(f"{SINGLE_COURSE_ENDPOINT}")
         if courses_req.status_code == 200:
-            available_courses = [x for x in courses_req.json() if x["id"] in user_courses]
-            return render(request, "users/user_cabinet.html", {'available_courses':available_courses})
+            results = courses_req.json()["results"]
+            available_courses = [x for x in results if x["id"] in user_courses]
+            return render(request, "webui/users/user_cabinet.html", {'available_courses':available_courses})
         else:
             raise Exception(f"Request is failed with status {courses_req.status_code}")
     else:
@@ -141,7 +143,7 @@ def edit_profile(request):
     else:
         if session_user_info(request): 
             form = EditProfile()
-            return render(request, "users/edit_profile.html", {'form': form})
+            return render(request, "webui/users/edit_profile.html", {'form': form})
         else:
             return HttpResponseRedirect("/enter")
             pass
@@ -214,7 +216,7 @@ def restore_access(request):
     else:
         form = RestoreForm()
         context = {'access_form': form}
-        return render(request,"users/restore_pass.html", context)
+        return render(request,"webui/users/restore_pass.html", context)
         pass
  
 def change_pass(request, uuid, encoded_datetime, encoded_email, user_id):
@@ -256,5 +258,5 @@ def change_pass(request, uuid, encoded_datetime, encoded_email, user_id):
     else:
         form = ChangePassForm()
         context = {'restore_form': form, "encoded_datetime":encoded_datetime, "encoded_email":encoded_email, "user_id":user_id,"uuid":uuid}
-        return render(request,"users/change_pass.html", context)
+        return render(request,"webui/users/change_pass.html", context)
         pass
