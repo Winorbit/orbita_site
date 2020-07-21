@@ -6,6 +6,8 @@ db.sqlite3
 local_endpoints.py
 
 # Byte-compiled / optimized / DLL files
+elk/
+
 nginx/logs
 web_api/deploy_static/
 web_ui/deploy_static/
