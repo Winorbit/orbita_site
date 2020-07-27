@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
-import logging
+# import logging
 
 from .forms import SignUpForm, LoginForm
 from .import users
@@ -10,8 +10,8 @@ from . import sessions
 import requests
 
 
-logging.basicConfig(level='DEBUG', filename='weblog.log', format='%(asctime)s %(levelname)s:%(message)s')
-logger = logging.getLogger()
+# logging.basicConfig(level='DEBUG', filename='weblog.log', format='%(asctime)s %(levelname)s:%(message)s')
+# logger = logging.getLogger()
 
 OK_CODES = (200, 201, 202, 203, 204, 205, 206)
 
