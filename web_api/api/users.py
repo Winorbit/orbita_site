@@ -6,6 +6,10 @@ from api.serializers import UserSerializer, UserProfileSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status, viewsets
+import logging
+
+logging.basicConfig(level='DEBUG', filename='weblog.log', format='%(asctime)s %(levelname)s:%(message)s')
+logger = logging.getLogger()
 
 class UserList(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('-id')
@@ -28,7 +32,7 @@ class UserList(viewsets.ModelViewSet):
 class UserProfileClass(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all().order_by('-id')
     serializer_class = UserProfileSerializer
-    
+
 @api_view(['POST'])
 def search_user(request):
     username = request.data.get("username")
@@ -46,7 +50,7 @@ def search_user(request):
 @api_view(['POST'])
 def search_user_by_email(request):
     email = request.data.get("email")
-    
+
     if User.objects.filter(email=email).exists():
         user = User.objects.get(email=email)
         data = {**UserSerializer(user).data}

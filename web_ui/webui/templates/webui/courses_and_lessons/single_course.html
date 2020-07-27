@@ -1,4 +1,4 @@
-{% extends 'static/base.html' %}
+{% extends 'webui/base.html' %}
 {% load static %}
 {% block title %}Ваш заказ{% endblock %}
 
@@ -6,7 +6,6 @@
 
 <form method="post">
     {% csrf_token %}
-
     {% if course_data.course.id not in request.session.user_courses %}
         <input type="hidden" name="submit" value="{{course_data.course.id}}">
         <button type="submit">Присоедениться к курсу</button>
