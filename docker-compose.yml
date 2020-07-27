@@ -14,7 +14,7 @@ services:
         restart: always
         expose:
             - ${PORT_UI}
-        command: bash -c "python manage.py collectstatic --noinput && gunicorn --reload -w 4  -b :${PORT_UI} --env DJANGO_SETTINGS_MODULE=settings wsgi"
+        command: bash -c "gunicorn --reload -w 4  -b :${PORT_UI} --env DJANGO_SETTINGS_MODULE=settings wsgi"
         volumes: 
             - ./web_ui/deploy_static/:/home/web_ui/deploy_static/
         env_file:
