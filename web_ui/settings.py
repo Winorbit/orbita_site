@@ -1,4 +1,13 @@
 import os
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
+
+sentry_sdk.init(
+    dsn="http://f7f43becb89d4028a62de9c6efc88e8c@127.0.0.1:8080/1",
+    integrations=[DjangoIntegration()],
+    send_default_pii=True
+)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 

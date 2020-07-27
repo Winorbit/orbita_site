@@ -38,3 +38,20 @@ services:
             - .env
         depends_on:
             - web-ui
+
+    # sentry:
+    #     image: sentry:9.1.2
+    #     ports:
+    #         - 8080:9000
+    #     env_file:
+    #         - sentry-variables.env
+
+    # sentry-cron:
+    #     image: sentry:9.1.2
+    #     env_file:
+    #         - sentry-variables.env
+
+    # sentry-worker-1:
+    #     image: sentry:9.1.2
+    #     env_file:
+    #         - sentry-variables.env

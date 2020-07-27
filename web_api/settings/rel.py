@@ -1,6 +1,3 @@
-from settings.base import *
-
-
 DEBUG = False
 
 SECRET_KEY = 'tob9j%nc_2=!*)*h2==&gt7%y%wjvq+h6g%l4@)fp2a@qd_=u*'
