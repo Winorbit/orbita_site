@@ -8,8 +8,10 @@ from rest_framework.response import Response
 from rest_framework import status, viewsets
 import logging
 
-logging.basicConfig(level='DEBUG', filename='weblog.log', format='%(asctime)s %(levelname)s:%(message)s')
+
+logging.basicConfig(level='DEBUG', filename='apilog.log', format='%(asctime)s %(levelname)s:%(message)s')
 logger = logging.getLogger()
+
 
 class UserList(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('-id')
@@ -25,8 +27,10 @@ class UserList(viewsets.ModelViewSet):
             serializer.save()
             new_user = User.objects.get(email=email, username=username)
             new_user_profile = UserProfile.objects.create(user=new_user, id = new_user.id, user_courses = [])
+            logger.info(f"Create user id - {new_user.id}")
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
+            logger.warning(f"New user not created")
             return Response(status=status.HTTP_409_CONFLICT)
 
 class UserProfileClass(viewsets.ModelViewSet):
