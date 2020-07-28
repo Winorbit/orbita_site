@@ -25,8 +25,10 @@ class UserList(viewsets.ModelViewSet):
             serializer.save()
             new_user = User.objects.get(email=email, username=username)
             new_user_profile = UserProfile.objects.create(user=new_user, id = new_user.id, user_courses = [])
+            logger.info(f"Create user id - {new_user.id}")
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
+            logger.warning(f"New user not created")
             return Response(status=status.HTTP_409_CONFLICT)
 
 class UserProfileClass(viewsets.ModelViewSet):
