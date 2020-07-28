@@ -8,8 +8,10 @@ from rest_framework.response import Response
 from rest_framework import status, viewsets
 import logging
 
-logging.basicConfig(level='DEBUG', filename='weblog.log', format='%(asctime)s %(levelname)s:%(message)s')
+
+logging.basicConfig(level='DEBUG', filename='apilog.log', format='%(asctime)s %(levelname)s:%(message)s')
 logger = logging.getLogger()
+
 
 class UserList(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('-id')
