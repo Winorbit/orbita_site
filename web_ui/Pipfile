@@ -12,6 +12,7 @@ Django = ">=2.1"
 Pillow = "*"
 psycopg2-binary = "*"
 sentry-sdk = "==0.10.2"
+python-json-logger = "*"
 
 [requires]
 python_version = "3.7"

@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
-# import logging
+
+import logging, json
+import logging.config
+from pythonjsonlogger import jsonlogger
 
 from .forms import SignUpForm, LoginForm
 from .import users
@@ -10,13 +13,36 @@ from . import sessions
 import requests
 
 
-# logging.basicConfig(level='DEBUG', filename='weblog.log', format='%(asctime)s %(levelname)s:%(message)s')
+with open('webui/logging.json', 'rt') as f:
+            config = json.load(f)
+logging.config.dictConfig(config)
+
+logger = logging.getLogger(__name__)
+
+
+
+
+# logHandler = logging.StreamHandler()
+# formatter = jsonlogger.JsonFormatter('{"time":%(asctime)s,"file_name": "%(filename)s:%(lineno)d" ,' '"level": "%(levelname)s" ,"msg":"%(message)s" }')
+# logHandler.setFormatter(formatter)
+
+# logger.setLevel(logging.DEBUG)
+# logger.addHandler(logHandler)
+
+# logging.basicConfig(level='DEBUG', filename='weblog_log.json', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 # logger = logging.getLogger()
+
+
+# logHandler = logging.StreamHandler()
+# formatter = jsonlogger.JsonFormatter()
+# logHandler.setFormatter(formatter)
+# logger.addHandler(logHandler)
 
 OK_CODES = (200, 201, 202, 203, 204, 205, 206)
 
 
 def courses(request):
+    logger.info("courses!!!")
     user = users.session_user_info(request)
     res = requests.get(f"{endpoints.COURSES_ENDPOINT}")
 
@@ -56,6 +82,7 @@ def single_course(request, id):
                     course_data = requests.get(f"{endpoints.SINGLE_COURSE_ENDPOINT}/{id}").json()
                     return HttpResponseRedirect(f"/courses/{course_id}/")
                 else:
+                    logger.warning(f"Some troubles with request {endpoints.PROFILES_ENDPOINT}/{user_id}- {req.status_code}")
                     raise Exception(f"Some troubles with request {endpoints.PROFILES_ENDPOINT}/{user_id}- {req.status_code}")
 
             if 'leave' in request.POST:
@@ -74,8 +101,9 @@ def single_course(request, id):
                     raise Exception(f"Some troubles with request to {endpoints.PROFILES_ENDPOINT}/{user_id} - {req.status_code}")
             return render(request, template_adresses.SINGLE_COURSE_PAGE)
         else:
+            logger.warning("Not found in request user and user_courses")
             raise Exception("Not found in request user and user_courses")
-            logger.info("Not found in request user and user_courses")
+            
 
     if request.method == 'GET':
         if users.session_user_info(request):

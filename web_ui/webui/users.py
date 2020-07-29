@@ -1,8 +1,13 @@
 import requests
 import math
 import uuid
-import json
-import logging
+
+import logging, json
+import logging.config
+from pythonjsonlogger import jsonlogger
+
+
+
 from settings import DEFAULT_MAIL_NAME
 from datetime import datetime
 
@@ -19,17 +24,11 @@ from .sessions import *
 
 max_diff = 86400
 
-logging.basicConfig(level='DEBUG', filename='weblog.log', format='%(asctime)s %(levelname)s:%(message)s')
-logger = logging.getLogger()
+with open('webui/logging.json', 'rt') as f:
+            config = json.load(f)
+logging.config.dictConfig(config)
 
-logging.getLogger('urllib3').setLevel('CRITICAL')
-logging.getLogger('asyncio').setLevel('CRITICAL')
-logging.getLogger('django').setLevel('CRITICAL')
-logging.getLogger('concurrent').setLevel('CRITICAL')
-logging.getLogger('asyncio').setLevel('CRITICAL')
-
-# for key in logging.Logger.manager.loggerDict:
-#     print(key)
+logger = logging.getLogger(__name__)
 
 
 def index(request):
@@ -68,6 +67,7 @@ def signup(request):
 
 
 def login(request):
+    logger.info("login!!!")
     if request.method == 'POST':
         form = LoginForm(data=request.POST)
         if form.is_valid():
@@ -110,6 +110,8 @@ def user_cabinet(request):
 
 
 def edit_profile(request):
+    logger.info(f'User with user_id:{request.session.get("user_id")} visited the page {request.build_absolute_uri()}')
+
     if request.method == 'POST':
         session_info = session_user_info(request) 
         if session_user_info:
@@ -121,13 +123,13 @@ def edit_profile(request):
                 try:
                     user_req = requests.get(f"{USERS_ENDPOINT}/{session_info['user_id']}")
                 except Exception as e:
-                    logger.warning(f"Error getting data by user - {e}")
+                    logger.error(f'Getting data by user user_id:{session_info["user_id"]} - {e}')
 
                 if user_req.status_code == 200:
                     user_info = user_req.json()
                 else:
+                    logger.warning(f"Request is failed with status {user_req.status_code}")
                     raise Exception(f"Request is failed with status {user_req.status_code}")
-                    logger.info(f"Request is failed with status {user_req.status_code}")
 
                 if form_data:
 
@@ -137,35 +139,39 @@ def edit_profile(request):
                         if new_pass != user_info["password"]:
                             user_info["password"] = new_pass
                         else:
-                            raise Exception("NEW PASSWORD IS EQUAL WITH CURRENT")
                             logger.info("NEW PASSWORD IS EQUAL WITH CURRENT")
+                            raise Exception("NEW PASSWORD IS EQUAL WITH CURRENT")
 
                     if form_data["username"]:
                         new_name = form_data['username']
                         if new_name != user_info["username"]:
                             user_info["username"] = new_name
                         else:
-                            raise Exception("NEW NAME IS EQUAL CURRENT NAME")
                             logger.info("NEW NAME IS EQUAL CURRENT NAME")
+                            raise Exception("NEW NAME IS EQUAL CURRENT NAME")
 
                     if form_data["email"]:
                         new_email = form_data["email"]
                         if new_email != user_info["email"]:
                             user_info["email"] = new_email
                         else:
-                            raise Exception("Email is equal!")
                             logger.info("Email is equal!")
+                            raise Exception("Email is equal!")
                 else:
-                    raise Exception("FORM IS EMPTY!!!!")
                     logger.info("FORM IS EMPTY!!!!")
+                    raise Exception("FORM IS EMPTY!!!!")
 
                 try:
                     upd_res = requests.put(f"{USERS_ENDPOINT}/{session_info['user_id']}/", data=user_info)
                 except Exception as e:
-                    logger.warning(f"Put data update user, {e}")
+                    logger.error(f'Data("id":"{user_info["id"]}", "username":"{user_info["username"]}", "email":"{user_info["email"]}","password":"{user_info["password"]}") user update - {e}')
 
                 if upd_res.status_code == 200:
-                    user = requests.get(f"{USERS_ENDPOINT}/{session_info['user_id']}")
+                    try:
+                        user = requests.get(f"{USERS_ENDPOINT}/{session_info['user_id']}")
+                    except Exception as e:
+                        logger.error(f'Getting user data user_id:{session_info["user_id"]} - {e}')
+
                     if request.session["username"] != user.json()["username"]:
                         request.session["username"] = user.json()["username"]
                         request.session.modified = True
