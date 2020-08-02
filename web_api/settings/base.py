@@ -1,5 +1,8 @@
 import os
 import psycopg2
+from pythonjsonlogger import jsonlogger
+import logging.config
+logging.config.fileConfig("logger_settings.ini")
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

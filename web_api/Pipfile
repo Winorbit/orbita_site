@@ -9,10 +9,10 @@ verify_ssl = true
 djangorestframework = ">=3"
 drf-yasg = ">=1.15"
 gunicorn = "*"
-psycopg2 = "*"
 Django = ">=2.1"
 Pillow = "*"
 psycopg2-binary = "*"
+python-json-logger = "*"
 
 [requires]
 python_version = "3.7"
