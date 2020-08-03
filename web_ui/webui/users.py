@@ -6,9 +6,7 @@ import logging, json
 import logging.config
 from pythonjsonlogger import jsonlogger
 
-
-
-from settings import DEFAULT_MAIL_NAME
+from settings import logger, DEFAULT_MAIL_NAME
 from datetime import datetime
 
 from django.shortcuts import render, redirect
@@ -23,12 +21,6 @@ from .sessions import *
 
 
 max_diff = 86400
-
-with open('webui/logging.json', 'rt') as f:
-            config = json.load(f)
-logging.config.dictConfig(config)
-
-logger = logging.getLogger(__name__)
 
 
 def index(request):
@@ -60,18 +52,18 @@ def signup(request):
             elif req.status_code == 409:
                 messages.error(request, 'Такой пользователь уже существует')
                 context = {'form': form}
-                return render(request, "users/signup.html", context)
+                return render(request, "webui/users/signup.html", context)
     else:
         context = {'form': form}
         return render(request,"webui/users/signup.html", context)
 
 
 def login(request):
-    logger.info("login!!!")
     if request.method == 'POST':
         form = LoginForm(data=request.POST)
         if form.is_valid():
             check_user = requests.post(f"{CONTENT_URL}/search_user", data = form.cleaned_data)
+            logger.info(f'url:{CONTENT_URL}/search_user - status_code:{check_user.status_code} - put_data:{form.cleaned_data} - get_data:{check_user.json()}')
             if check_user.status_code == 200:
                 logger.info(f"User id-{check_user.json()['id']} login success")
                 write_into_session(request,**check_user.json())
@@ -110,7 +102,7 @@ def user_cabinet(request):
 
 
 def edit_profile(request):
-    logger.info(f'User with user_id:{request.session.get("user_id")} visited the page {request.build_absolute_uri()}')
+    logger.info(f'user_id:{request.session.get("user_id")} visited the page {request.build_absolute_uri()}')
 
     if request.method == 'POST':
         session_info = session_user_info(request) 
@@ -122,8 +114,9 @@ def edit_profile(request):
 
                 try:
                     user_req = requests.get(f"{USERS_ENDPOINT}/{session_info['user_id']}")
+                    logger.info(f'url:{USERS_ENDPOINT}/{session_info["user_id"]} - status_code:{user_req.status_code} - get_data:{user_req.json()} - user_id:{session_info["user_id"]}')
                 except Exception as e:
-                    logger.error(f'Getting data by user user_id:{session_info["user_id"]} - {e}')
+                    logger.error(f'url:{USERS_ENDPOINT}/{session_info["user_id"]} - status_code:{user_req.status_code} - get_data:{user_req.json()} - user_id:{session_info["user_id"]}', exc_info=True)
 
                 if user_req.status_code == 200:
                     user_info = user_req.json()
@@ -139,7 +132,7 @@ def edit_profile(request):
                         if new_pass != user_info["password"]:
                             user_info["password"] = new_pass
                         else:
-                            logger.info("NEW PASSWORD IS EQUAL WITH CURRENT")
+                            logger.info(f"NEW PASSWORD IS EQUAL WITH CURRENT user -_id:{session_info['user_id']}")
                             raise Exception("NEW PASSWORD IS EQUAL WITH CURRENT")
 
                     if form_data["username"]:
@@ -147,7 +140,7 @@ def edit_profile(request):
                         if new_name != user_info["username"]:
                             user_info["username"] = new_name
                         else:
-                            logger.info("NEW NAME IS EQUAL CURRENT NAME")
+                            logger.info(f"NEW NAME IS EQUAL CURRENT NAME -_id:{session_info['user_id']}")
                             raise Exception("NEW NAME IS EQUAL CURRENT NAME")
 
                     if form_data["email"]:
@@ -155,22 +148,22 @@ def edit_profile(request):
                         if new_email != user_info["email"]:
                             user_info["email"] = new_email
                         else:
-                            logger.info("Email is equal!")
+                            logger.info("Email is equal! -_id:{session_info['user_id']}")
                             raise Exception("Email is equal!")
                 else:
-                    logger.info("FORM IS EMPTY!!!!")
+                    logger.info("FORM IS EMPTY!!!! -_id:{session_info['user_id']}")
                     raise Exception("FORM IS EMPTY!!!!")
-
                 try:
                     upd_res = requests.put(f"{USERS_ENDPOINT}/{session_info['user_id']}/", data=user_info)
+                    logger.info(f'url:{USERS_ENDPOINT}/{session_info["user_id"]} - status_code:{upd_res.status_code} - put_data:{user_info} - get_data:{upd_res.json()} - user_id:{session_info["user_id"]}')
                 except Exception as e:
-                    logger.error(f'Data("id":"{user_info["id"]}", "username":"{user_info["username"]}", "email":"{user_info["email"]}","password":"{user_info["password"]}") user update - {e}')
+                    logger.error(f'url:{USERS_ENDPOINT}/{session_info["user_id"]} - status_code:{upd_res.status_code} - put_data:{user_info} - get_data:{upd_res.json()} - user_id:{session_info["user_id"]}', exc_info=True)
 
                 if upd_res.status_code == 200:
                     try:
                         user = requests.get(f"{USERS_ENDPOINT}/{session_info['user_id']}")
                     except Exception as e:
-                        logger.error(f'Getting user data user_id:{session_info["user_id"]} - {e}')
+                        logger.error(f'Getting user data user_id:{session_info["user_id"]}', exc_info=True)
 
                     if request.session["username"] != user.json()["username"]:
                         request.session["username"] = user.json()["username"]
@@ -218,8 +211,8 @@ def check_expire(datetime_now:int, datetime:int):
     if delta < max_diff:
         result = True
     if delta <= 0:
-        raise Exception("SOME WRONG WITH DELTA",  time_from_token, datetime_now, delta)
         logger.warning(f"SOME WRONG WITH DELTA {time_from_token}, {datetime_now}, {delta}")
+        raise Exception("SOME WRONG WITH DELTA",  time_from_token, datetime_now, delta)
     return result
     pass
 
@@ -237,13 +230,13 @@ def send_restore_message(email_address, email_text):
     try:
         res = send_mail("Password restore", email_text, DEFAULT_MAIL_NAME, [email_address], fail_silently=False)
     except Exception as e:
-        raise Exception(f"Problem with sending email - {e}")
         logger.warning(f"Problem with sending email - {e}")
+        raise Exception(f"Problem with sending email - {e}")
     if res == 1:
         return True
     else:
-        raise Exception("Some problems with sending email")
         logger.warning("Some problems with sending email")
+        raise Exception("Some problems with sending email")
 
 
 def restore_access(request):
@@ -257,15 +250,15 @@ def restore_access(request):
                 user = res_user_by_email.json()
                 user_id = user["id"]
             else:
-                raise Exception(f"Request to get user was gailed with status {res.user_by_email.status_code}")
                 logger.warning(f"Request to get user was gailed with status {res.user_by_email.status_code}")
+                raise Exception(f"Request to get user was gailed with status {res.user_by_email.status_code}")
             now_in_secs = int(datetime.now().strftime("%s"))
             email_text = email_for_restore_access(now_in_secs, user_email, user_id)
             send_restore_message(user_email, email_text)
             return render(request, "restore_message_sent.html")
         else:
-            raise Exception("Email not sent")
             logger.warning("Email not sent")
+            raise Exception("Email not sent")
 
     else:
         form = RestoreForm()
@@ -284,11 +277,11 @@ def change_pass(request, uuid, encoded_datetime, encoded_email, user_id):
             new_pass = form_data["new_pass"]
             repeated_new_pass = form_data["repeat_new_pass"]
             if new_pass != repeated_new_pass:
-                raise Exception("Passes not equal, please, try again!")
                 logger.warning("Passes not equal, please, try again!")
+                raise Exception("Passes not equal, please, try again!")
         else:
-            raise Exception("Some troubles with vkaid form")
             logger.warning("Some troubles with vkaid form")
+            raise Exception("Some troubles with vkaid form")
 
         restore_request_datetime = decode_number_to_str(int(link_elements[3])) 
         restore_request_email = decode_number_to_str(int(link_elements[4]))
@@ -305,14 +298,14 @@ def change_pass(request, uuid, encoded_datetime, encoded_email, user_id):
                     if upd_res.status_code == 200:
                         return redirect("/login") 
                     else:
-                        raise Exception(f"Updating user was failed - status {upd_res.status_code}")
                         logger.warning(f"Updating user was failed - status {upd_res.status_code}")
+                        raise Exception(f"Updating user was failed - status {upd_res.status_code}")
                 else:
-                    raise Exception(f"Some troubles with user - field email not in user")
                     logger.warning(f"Some troubles with user - field email not in user")
+                    raise Exception(f"Some troubles with user - field email not in user")
             else:
-                raise Exception(f"problem with request to web_api - request status is {res_status_code}")
                 logger.warning(f"problem with request to web_api - request status is {res_status_code}")
+                raise Exception(f"problem with request to web_api - request status is {res_status_code}")
         else:
             return render(request, "token_expired.html")
     else:

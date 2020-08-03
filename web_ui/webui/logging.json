@@ -3,22 +3,38 @@
     "disable_existing_loggers": "False",
     "formatters": {
         "simple": {
-            "format": "%(asctime)s - %(levelname)s - %(name)s:%(funcName)s:%(lineno)d - %(message)s"
+            "class":"pythonjsonlogger.jsonlogger.JsonFormatter",
+            "format": "%(asctime)s %(levelname)s %(name)s %(funcName)s %(lineno)d %(message)s"
+        },
+        "telegram": {
+            "class": "telegram_handler.HtmlFormatter"
         }
     },
 
     "handlers": {
+        "telegram": {
+            "class": "telegram_handler.TelegramHandler",
+            "formatter": "telegram",
+            "level": "INFO",
+            "token": "1344192052:AAEcpHbzv-LoUZxcbPO6eNIt1mFhT5TzVW8",
+            "chat_id": "-405639838"
+        },
         "file_handler": {
             "class": "logging.FileHandler",
             "level": "DEBUG",
             "formatter": "simple",
             "filename": "webui_log.log",
             "encoding": "utf8"
+        },
+        "stream_handler": {
+            "class": "logging.StreamHandler",
+            "level": "INFO",
+            "formatter": "simple"
         }
     },
 
     "root": {
         "level": "DEBUG",
-        "handlers": ["file_handler"]
+        "handlers": ["file_handler", "stream_handler", "telegram"]
     }
 }

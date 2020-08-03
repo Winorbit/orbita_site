@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "b3dce6bfcceb33f3f42a3aed2dece46ddb67ff0ca1eb8b0972fdbfb68c8c8ec2"
+            "sha256": "d1d26965f812b35af4be44a32c2b356d9f01d37804042eb3bc83b0ff83f472d9"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -39,11 +39,11 @@
         },
         "django": {
             "hashes": [
-                "sha256:31a5fbbea5fc71c99e288ec0b2f00302a0a92c44b13ede80b73a6a4d6d205582",
-                "sha256:5457fc953ec560c5521b41fad9e6734a4668b7ba205832191bbdff40ec61073c"
+                "sha256:96fbe04e8ba0df289171e7f6970e0ff8b472bf4f909ed9e0e5beccbac7e1dbbe",
+                "sha256:c22b4cd8e388f8219dc121f091e53a8701f9f5bca9aa132b5254263cab516215"
             ],
             "index": "pypi",
-            "version": "==3.0.8"
+            "version": "==3.0.9"
         },
         "gunicorn": {
             "hashes": [
@@ -134,6 +134,13 @@
             ],
             "index": "pypi",
             "version": "==0.1.11"
+        },
+        "python-telegram-handler": {
+            "hashes": [
+                "sha256:0da65e9c9011b4269a339eb2cea778c82e4f3d5d92bda9a27f0fe3bb318e76f3"
+            ],
+            "index": "pypi",
+            "version": "==2.2"
         },
         "pytz": {
             "hashes": [

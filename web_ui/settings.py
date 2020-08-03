@@ -2,6 +2,17 @@ import os
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
+import logging, json
+import logging.config
+from pythonjsonlogger import jsonlogger
+
+
+with open('webui/logging.json', 'rt') as f:
+            config = json.load(f)
+logging.config.dictConfig(config)
+
+logger = logging.getLogger(__name__)
+
 
 sentry_sdk.init(
     dsn="http://f7f43becb89d4028a62de9c6efc88e8c@127.0.0.1:8080/1",
