@@ -1,11 +1,11 @@
 ### Структура проекта:
-|          |   home    |            |
-|:---------|:---------:|-----------:|
-|          |   orbita  |            |
-|dev       |release    |dev         |
-|nginx     |nginx      |nginx       |
-|web_api   |web_api    |web_api     |
-|web_ui    |web_ui     |web_ui      |
+|          | **home/**  |            |
+|:---------|:----------:|-----------:|
+|          |**orbita/** |            |
+|**dev/**  |**release/**|**dev/**    |
+|nginx/    |nginx/      |nginx/      |
+|web_api/  |web_api/    |web_api/    |
+|web_ui/   |web_ui/     |web_ui/     |
 
 ### Работа с докером:
 - войти в директорию где лежит docker-compose.yml
@@ -17,13 +17,38 @@
 ```$ docker-compose down```
 
 ### Работа с pipenv окружением:
-- заинсталить pipenv:
+- установить pipenv:
 ```$ pip install pipenv```
 - зайти в директорию конкретного проекта **web_api** либо **web_ui**
 - поднять окружение:
 ```$ pipenv shell```
-- установить зависимости:
-```$ pipenv install```
+- установить зависимости последней версии:
+```$ pipenv install```  
+либо  
+- установить зависимости конкретных версий, которые находятся в Pipfile.lock:  
+```$ pipenv install --ignore-pipfile```  
+
+>полезные команды:
+>>- Использование аргумента `--dev` поместит зависимость в специальную папку [dev-packages] в _Pipfile_ :  
+>>```$ pipenv install пакет --dev```  
+>>- Установит все зависимости, необходимые для разработки, которые включают в себя как обычные зависимости, так и те, которые вы указали в аргументе `--dev` во время установки:  
+>>```$ pipenv install --dev```  
+>>-  Создаст/обновит файл _Pipfile.lock_:  
+>>```$ pipenv lock```  
+>>-  Выведет древовидную структуру, показывающую зависимости:  
+>>```$ pipenv graph```  
+>>- Перевернутое дерево может быть более полезным, когда вы пытаетесь выяснить конфликтующие подчиненные зависимости:  
+>>```$ pipenv graph --reverse```  
+>>- Проверить наличие уязвимостей безопасности (и требований PEP 508) в вашей среде:  
+>>```$ pipenv check```  
+>>- Удалить пакет(ы), dev-пакеты:  
+>>```$ pipenv uninstall пакет```  
+>>```$ pipenv uninstall --all```  
+>>```$ pipenv uninstall --all-dev```  
+>>- Узнать, по какому пути находится виртуальная среда:  
+>>```$ pipenv --venv```  
+>>- Узнать, по какому пути находится ваш проект:  
+>>```$ pipenv --where```
 
 ### Просмотр логов:
 - коннектимся к серверу по ssh:
@@ -34,5 +59,5 @@
 ```$ nano /home/orbita/dev/web_api/api_logfile.log```  
 ```$ nano /home/orbita/dev/web_ui/ui_logfile.log```
 - для просмотра логов **nginx** выбираем проект **dev** либо **release** либо **prod**:  
-```$ nano /home/orbita/dev/access.log```  
+```$ nano /home/orbita/dev/nginx/access.log```  
 ```$ nano /home/orbita/dev/nginx/error.log```
