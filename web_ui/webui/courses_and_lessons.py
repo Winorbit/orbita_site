@@ -69,10 +69,10 @@ def single_course(request, id):
                 user_courses.remove(course_id)
                 try:
                     req = requests.put(f'{endpoints.PROFILES_ENDPOINT}/{user_id}/', data={"user_courses":user_courses, "user": user_id})
-                    logger.info(f'url:{USERS_ENDPOINT}/{session_info["user_id"]} - status_code:{req.status_code} - put_data:{req} - get_data:{req.json()}')
                 except Exception as e:
                     logging.exception(f"Exception occurred {endpoints.PROFILES_ENDPOINT}/{user_id}/")
                 if req.status_code == 200:
+                    logger.info(f'url:{USERS_ENDPOINT}/{session_info["user_id"]} - status_code:{req.status_code} - put_data:{req} - get_data:{req.json()}')
                     request.session.modified = True
                     user = users.session_user_info(request)
                     try:

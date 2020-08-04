@@ -1,24 +1,17 @@
 import os
-import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
 
-import logging, json
+import yaml
+import logging
 import logging.config
 from pythonjsonlogger import jsonlogger
 
 
-with open('webui/logging.json', 'rt') as f:
-            config = json.load(f)
+with open('logger_config.yml', 'r') as f:
+            config = yaml.safe_load(f.read())
 logging.config.dictConfig(config)
 
 logger = logging.getLogger(__name__)
 
-
-sentry_sdk.init(
-    dsn="http://f7f43becb89d4028a62de9c6efc88e8c@127.0.0.1:8080/1",
-    integrations=[DjangoIntegration()],
-    send_default_pii=True
-)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 

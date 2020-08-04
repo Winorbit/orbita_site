@@ -2,9 +2,9 @@ import requests
 import math
 import uuid
 
-import logging, json
-import logging.config
-from pythonjsonlogger import jsonlogger
+# import logging, json
+# import logging.config
+# from pythonjsonlogger import jsonlogger
 
 from settings import logger, DEFAULT_MAIL_NAME
 from datetime import datetime

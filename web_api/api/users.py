@@ -7,24 +7,24 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status, viewsets
 
-from settings import logging
-logger = logging.getLogger(__name__)
+from settings.__init__ import logger
 
 class UserList(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('-id')
     serializer_class = UserSerializer
-
+    logger.info(f"!!!!!!!!!!UserList!!!!!!!!!!!!!!")
     def create(self, request):
+        logger.info(f"!!!!!!!!!!create!!!!!!!!!!!!!!")
         if all(value != None for value in request.data.values()):
             email = request.data.get("email")
             username = request.data.get("username")
             password = request.data.get("password") or request.data.get("password1")
-            logging.info(f"TRYING SERIALIZE NEW USER: {request.data}")
+            logger.info(f"TRYING SERIALIZE NEW USER: {request.data}")
 
             serializer = UserSerializer(data={"username":username, "email":email, "password":password}) 
             if serializer.is_valid():
                 serializer.save()
-                logging.info(f"NEW USER CREATED: {serializer.data} ")
+                logger.info(f"NEW USER CREATED: {serializer.data} ")
                 new_user = User.objects.get(email=email, username=username)
                 if UserProfile.objects.create(user=new_user, id = new_user.id, user_courses = []):
                     logger.info(f"USER PROFILE WAS CREATED - {new_user.id}")
