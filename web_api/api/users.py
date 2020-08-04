@@ -12,9 +12,8 @@ from settings.__init__ import logger
 class UserList(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('-id')
     serializer_class = UserSerializer
-    logger.info(f"!!!!!!!!!!UserList!!!!!!!!!!!!!!")
+
     def create(self, request):
-        logger.info(f"!!!!!!!!!!create!!!!!!!!!!!!!!")
         if all(value != None for value in request.data.values()):
             email = request.data.get("email")
             username = request.data.get("username")
