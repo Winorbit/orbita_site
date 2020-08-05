@@ -10,7 +10,7 @@ with open('logger_config.yml', 'r') as f:
             config = yaml.safe_load(f.read())
 logging.config.dictConfig(config)
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('ui_logger')
 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))

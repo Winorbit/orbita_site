@@ -5,14 +5,15 @@ from pythonjsonlogger import jsonlogger
 import logging.config
 
 
-with open('/home/web_api/logger_config.yml', 'r') as f:
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+with open(f'{BASE_DIR}/logger_config.yml', 'r') as f:
             config = yaml.safe_load(f.read())
 logging.config.dictConfig(config)
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('api_logger')
 
-
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 INSTALLED_APPS = [
     'django.contrib.admin',

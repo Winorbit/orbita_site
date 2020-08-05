@@ -1,11 +1,13 @@
 ### Структура проекта:
-|          | **home/**  |            |
-|:---------|:----------:|-----------:|
-|          |**orbita/** |            |
-|**dev/**  |**release/**|**dev/**    |
-|nginx/    |nginx/      |nginx/      |
-|web_api/  |web_api/    |web_api/    |
-|web_ui/   |web_ui/     |web_ui/     |
+|           | **home/**  |            |
+|:--------- |:----------:|-----------:|
+|           |**orbita/** |            |
+|**dev/**   |**release/**|**dev/**    |
+|nginx/     |nginx/      |nginx/      |
+|web_api/   |web_api/    |web_api/    |
+|web_ui/    |web_ui/     |web_ui/     |
+|           |**ports:**  |            |
+|1337 и 8007|1338 и 8008 |1339        |
 
 ### Работа с докером:
 - войти в директорию где лежит docker-compose.yml

@@ -1,4 +1,5 @@
 version: 1
+disable_existing_loggers: False
 
 formatters:
     json:
@@ -12,8 +13,8 @@ formatters:
 handlers:
     telegram: 
         class: telegram_handler.TelegramHandler
-        formatter: telegram
         level: WARNING
+        formatter: telegram
         token: 1344192052:AAEcpHbzv-LoUZxcbPO6eNIt1mFhT5TzVW8
         chat_id: -405639838
     file_handler: 
@@ -27,6 +28,7 @@ handlers:
         level: DEBUG
         formatter: simple
 
-root:
-    level: DEBUG
-    handlers: [telegram, file_handler, console]
+loggers:
+    ui_logger:
+        level: DEBUG
+        handlers: [telegram, file_handler, console]
