@@ -1,3 +1,7 @@
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
+
 DEBUG = False
 
 SECRET_KEY = 'tob9j%nc_2=!*)*h2==&gt7%y%wjvq+h6g%l4@)fp2a@qd_=u*'
@@ -16,3 +20,10 @@ DATABASES = {
         'PORT' : '5432'
     },
 }
+
+#Sentry-online
+sentry_sdk.init(
+    dsn="https://c78be8b64ec64fed8e941e73857c9f45@o430757.ingest.sentry.io/5379863",
+    integrations=[DjangoIntegration()],
+    send_default_pii=True
+)

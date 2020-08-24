@@ -4,17 +4,21 @@
 
 {% block content %}
 
-<form method="post">
-    {% csrf_token %}
-    {% if course_data.course.id not in request.session.user_courses %}
-        <input type="hidden" name="submit" value="{{course_data.course.id}}">
-        <button type="submit">Присоедениться к курсу</button>
-    {% else %}
-        <input type="hidden" name="leave" value="{{course_data.course.id}}">
-        <button type="submit">Отписаться от курса</button>
-    {% endif %}
+<h1>{{course_data.title}}</h1>
+<p>Описание курса: {{course_data.description}}</p>
 
-</form>
+{% if login_user %}
+    <form method="post">
+        {% csrf_token %}
+        {% if course_data.id not in request.session.user_courses %}
+            <input type="hidden" name="subscribe" value="{{course_data.id}}">
+            <button type="submit">Присоедениться к курсу</button>
+        {% else %}
+            <input type="hidden" name="unsubscribe" value="{{course_data.id}}">
+            <button type="submit">Отписаться от курса</button>
+        {% endif %}
+    </form>
+{% endif %}
 
 {% for course_lesson in course_data.lessons %}
 <ul>

@@ -26,10 +26,13 @@
         <div class="col-md-4">
             <div class="card border success">
                 <img class="card-img-top"
-                    src="{% if place.icon %}{{ place.icon.url }}{% else %}{% static "img/no-image.jpg"%}{% endif %}"
+                    src="{% if place.icon %}{{ place.icon.url }}{% else %}{% static "img/card.jpeg"%}{% endif %}"
                     alt="Card image cap" style="height: 280px;">
                 <div class="card-body">
-                    <h4 class="card-title"><a href="/courses/{{course}}" class="font-weight-bold">{{course}}</a></h4>
+                    <h4 class="card-title">
+                        <a href="/courses/{{course.id}}" class="font-weight-bold">{{course.title}}</a>
+                    </h4>
+                    <p class="card-text">Описание курса {{course.description}}</p>
                 </div>
             </div>
         </div>
