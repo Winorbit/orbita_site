@@ -1,4 +1,4 @@
-version: '3.4'
+version: '3.7'
 services:
     web-api:
         build: ./web_api
@@ -41,3 +41,7 @@ services:
             - .env
         depends_on:
             - web-ui
+networks:
+    default:
+        external:
+            name: "${COMPOSE_PROJECT_NAME}-network"

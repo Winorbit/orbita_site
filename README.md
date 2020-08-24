@@ -63,3 +63,24 @@
 - для просмотра логов **nginx** выбираем проект **dev** либо **release** либо **prod**:  
 ```$ nano /home/orbita/dev/nginx/access.log```  
 ```$ nano /home/orbita/dev/nginx/error.log```
+
+### Запуск Sentry локально в докере и подключение к нашему проекту:
+- создаем папку _sentry_ заходим в нее  
+- клонируем репозиторий:  
+```git clone git@github.com:getsentry/onpremise.git .```  
+- запускаем скрипт:  
+```./install.sh```  
+- запускаем контейнеры:  
+```docker-compose up --build -d```  
+- вставляем в адресную строку:  
+```http://0.0.0.0:9000/```  
+- клацаем "Lost your password?" получаем пароль, логинимся  
+- в правом верхнем углу клацаем "Create Project" -> выбираем "Django" -> задаем имя проекта -> "Create"  
+- копируем **dsn**, пример того что нужно скопировать:  
+```"http://d2c11a7b94d148b7a4fe65fbcc271f73@0.0.0.0:9000/4"```  
+- в папках _web_api_ и _web_ui_ создаем файлик _.env_ создаем переменную **DSN_SENTRY**  
+и вставляем то, что скопировали, в созданные файлики пример:  
+```DSN_SENTRY="http://d2c11a7b94d148b7a4fe65fbcc271f73@0.0.0.0:9000/4"```  
+- запускаем окружение `pipenv shell`, если запущено, перезапускаем  
+- устанавливаем `sentry-sdk`:  
+```pipenv install sentry-sdk``  

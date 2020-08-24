@@ -2,16 +2,11 @@ import requests
 import math
 import uuid
 
-# import logging, json
-# import logging.config
-# from pythonjsonlogger import jsonlogger
-
 from settings import logger, DEFAULT_MAIL_NAME
 from datetime import datetime
 
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail
-from django.http import HttpResponseRedirect
 from django.contrib.auth import logout
 from django.contrib import messages
 
@@ -67,7 +62,7 @@ def login(request):
             if check_user.status_code == 200:
                 logger.info(f"User id-{check_user.json()['id']} login success")
                 write_into_session(request,**check_user.json())
-                return HttpResponseRedirect('/my_cabinet')
+                return redirect('/my_cabinet')
             else:
                 messages.info(request, 'Чет не то вводишь, человек.')
                 context={}
@@ -97,18 +92,15 @@ def user_cabinet(request):
             logger.warning(f"Request is failed with status {courses_req.status_code}")
             raise Exception(f"Request is failed with status {courses_req.status_code}")
     else:
-        return HttpResponseRedirect("/enter")
+        return redirect("/enter")
         pass
 
 
 def edit_profile(request):
-    logger.info(f'user_id:{request.session.get("user_id")} visited the page {request.build_absolute_uri()}')
-
     if request.method == 'POST':
         session_info = session_user_info(request) 
         if session_user_info:
             form = EditProfile(data=request.POST)
-
             if form.is_valid():
                 form_data = form.cleaned_data
 
@@ -169,17 +161,17 @@ def edit_profile(request):
                         request.session["username"] = user.json()["username"]
                         request.session.modified = True
 
-                return HttpResponseRedirect('/my_cabinet',)
+                return redirect('/my_cabinet',)
             else:
-                return HttpResponseRedirect('/error')
+                return redirect('/error')
         else:
-            return HttpResponseRedirect('/')
+            return redirect('/')
     else:
         if session_user_info(request): 
             form = EditProfile()
             return render(request, "webui/users/edit_profile.html", {'form': form})
         else:
-            return HttpResponseRedirect("/enter")
+            return redirect("/enter")
             pass
 
 

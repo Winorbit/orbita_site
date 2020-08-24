@@ -18,10 +18,10 @@ OK_CODES = (200, 201, 202, 203, 204, 205, 206)
 def courses(request):
     user = users.session_user_info(request)
     res = requests.get(f"{endpoints.COURSES_ENDPOINT}")
-    logger.info(f'url:{endpoints.COURSES_ENDPOINT} - status_code:{res.status_code} - get_data:{res.json()}')
 
     if res.status_code in OK_CODES:
         courses_data = res.json()['results']
+        # logger.info(f'url:{endpoints.COURSES_ENDPOINT} - username:{user["username"]} - status_code:{res.status_code} - res:{res.json()}')
         return render(request, "webui/courses_and_lessons/courses.html",{'courses':courses_data, "user":user})
     else:
         logger.warning(f"url:{endpoints.COURSES_ENDPOINT} - get_data:{res.json()}")
@@ -44,9 +44,9 @@ def single_course(request, id):
     if request.method == 'POST':
         user_id = request.session.get("user_id")
         user_courses = request.session.get("user_courses")
-        if user_id :    
-            if 'submit' in request.POST:
-                course_id = request.POST["submit"]
+        if user_id :
+            if 'subscribe' in request.POST:
+                course_id = request.POST["subscribe"]
                 user_courses.append(course_id)
                 try:
                     req = requests.put(f'{endpoints.PROFILES_ENDPOINT}/{user_id}/', data={"user_courses":[course_id], "user": user_id})
@@ -61,18 +61,19 @@ def single_course(request, id):
                         logging.exception(f"Exception occurred {endpoints.SINGLE_COURSE_ENDPOINT}/{id}/")
                     return HttpResponseRedirect(f"/courses/{course_id}/")
                 else:
-                    logger.warning(f"Some troubles with request {endpoints.PROFILES_ENDPOINT}/{user_id}- {req.status_code}")
-                    raise Exception(f"Some troubles with request {endpoints.PROFILES_ENDPOINT}/{user_id}- {req.status_code}")
+                    logger.warning(f"Some troubles with request {endpoints.PROFILES_ENDPOINT}/{user_id} - {req.status_code}")
+                    raise Exception(f"Some troubles with request {endpoints.PROFILES_ENDPOINT}/{user_id} - {req.status_code}")
 
-            if 'leave' in request.POST:
-                course_id = request.POST["leave"]
+            if 'unsubscribe' in request.POST:
+                course_id = request.POST["unsubscribe"]
                 user_courses.remove(course_id)
+                context = {"user_courses":user_courses, "user": user_id}
                 try:
-                    req = requests.put(f'{endpoints.PROFILES_ENDPOINT}/{user_id}/', data={"user_courses":user_courses, "user": user_id})
+                    req = requests.put(f'{endpoints.PROFILES_ENDPOINT}/{user_id}/', data=context)
                 except Exception as e:
-                    logging.exception(f"Exception occurred {endpoints.PROFILES_ENDPOINT}/{user_id}/")
+                    logging.exception(f'url:{endpoints.PROFILES_ENDPOINT}/{user_id}/ - status_code:{req.status_code} - put_data:{context} - get_data:{req.json()}')
                 if req.status_code == 200:
-                    logger.info(f'url:{USERS_ENDPOINT}/{session_info["user_id"]} - status_code:{req.status_code} - put_data:{req} - get_data:{req.json()}')
+                    logger.info(f'url:{endpoints.PROFILES_ENDPOINT}/{user_id}/ - status_code:{req.status_code} - put_data:{context} - get_data:{req.json()}')
                     request.session.modified = True
                     user = users.session_user_info(request)
                     try:
@@ -90,13 +91,13 @@ def single_course(request, id):
 
     if request.method == 'GET':
         if users.session_user_info(request):
-            user = users.session_user_info(request)
+            user_info = users.session_user_info(request)
         else:
-            user = None
+            user_info = None
         try:
             res = requests.get(f"{endpoints.SINGLE_COURSE_ENDPOINT}/{id}")
         except Exception as e:
             logging.exception(f"Exception occurred {endpoints.SINGLE_COURSE_ENDPOINT}/{id}")
         course_data = res.json()
-        return render(request, "webui/courses_and_lessons/single_course.html", {'course_data':course_data, "user_info":user})
+        return render(request, "webui/courses_and_lessons/single_course.html", {'course_data':course_data, "login_user":user_info})
         pass

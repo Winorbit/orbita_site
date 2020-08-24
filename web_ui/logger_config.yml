@@ -27,8 +27,12 @@ handlers:
         class: logging.StreamHandler
         level: DEBUG
         formatter: simple
+    sentry: 
+        class: sentry_sdk.integrations.logging.EventHandler
+        level: DEBUG
+        formatter: json
 
 loggers:
     ui_logger:
         level: DEBUG
-        handlers: [telegram, file_handler, console]
+        handlers: [telegram, file_handler, console, sentry]

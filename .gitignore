@@ -8,10 +8,13 @@ local_endpoints.py
 # Byte-compiled / optimized / DLL files
 elk/
 sentry/
+sen/
 sentry-variables.env
 
 web_api/api_logfile.log
 web_ui/ui_logfile.log
+web_ui/.env
+web_api/.env
 
 nginx/logs
 web_api/deploy_static/
