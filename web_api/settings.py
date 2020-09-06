@@ -1,8 +1,24 @@
 import os
 import psycopg2
-
+import logging.config
+from pythonjsonlogger import jsonlogger
+import yaml
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+SECRET_KEY=os.environ["SECRET_KEY"]
+
+ALLOWED_HOSTS = ["localhost",'31.131.28.206', 'web-api', '127.0.0.1', '0.0.0.0']
+
+DEBUG = os.environ["DEBUG"]
+
+# with open(f'{BASE_DIR}/logger_config.yml', 'r') as f:
+with open(f'{BASE_DIR}/web_api/logger_config.yml', 'r') as f:
+            config = yaml.safe_load(f.read())
+
+logging.config.dictConfig(config)
+
+logger = logging.getLogger('api_logger')
 
 
 INSTALLED_APPS = [
@@ -45,11 +61,19 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'wsgi.application'
 
 DATABASES = {
-    
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ["DB_NAME"],
+        'USER' : os.environ["DB_USER"], 
+        'PASSWORD' : os.environ["DB_PASS"], 
+        'HOST' : os.environ["DB_HOST"],
+        'PORT' : os.environ["DB_PORT"],
+    },
 }
+
+WSGI_APPLICATION = 'wsgi.application'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -66,7 +90,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LANGUAGE_CODE = 'ru-ru'
+LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Europe/Moscow'
 
@@ -77,9 +101,10 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'deployment', 'collected_static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'deploy_static')
 
 REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS':'rest_framework.pagination.PageNumberPagination',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',

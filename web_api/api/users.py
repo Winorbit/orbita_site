@@ -7,28 +7,39 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status, viewsets
 
+# from settings.__init__ import logger
+from settings import logger
+
 class UserList(viewsets.ModelViewSet):
-    queryset = User.objects.all()
+    queryset = User.objects.all().order_by('-id')
     serializer_class = UserSerializer
 
     def create(self, request):
-        email = request.data.get("email")
-        username = request.data.get("username")
-        password = request.data.get("password1")
+        if all(value != None for value in request.data.values()):
+            email = request.data.get("email")
+            username = request.data.get("username")
+            password = request.data.get("password") or request.data.get("password1")
+            logger.info(f"TRYING SERIALIZE NEW USER: {request.data}")
 
-        serializer = UserSerializer(data={"username":username, "email":email, "password":password})
-        if serializer.is_valid():
-            serializer.save()
-            new_user = User.objects.get(email=email, username=username)
-            new_user_profile = UserProfile.objects.create(user=new_user, id = new_user.id, user_courses = [])
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            serializer = UserSerializer(data={"username":username, "email":email, "password":password}) 
+            if serializer.is_valid():
+                serializer.save()
+                logger.info(f"NEW USER CREATED: {serializer.data} ")
+                new_user = User.objects.get(email=email, username=username)
+                if UserProfile.objects.create(user=new_user, id = new_user.id, user_courses = []):
+                    logger.info(f"USER PROFILE WAS CREATED - {new_user.id}")
+                    return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                logger.error(f"NEW USER WAS NOT CREATED {serializer.data} BECAUSE OF {serializer.errors}")
+                return Response(serializer.errors, status=status.HTTP_412_PRECONDITION_FAILED)
         else:
-            return Response(status=status.HTTP_409_CONFLICT)
-
+            logger.error(f"NEW USER WAS NOT CREATED - SOME EMPTY INPUT FIELDS: {request.data}")
+            return Response(status=status.HTTP_412_PRECONDITION_FAILED)
+        
 class UserProfileClass(viewsets.ModelViewSet):
-    queryset = UserProfile.objects.all()
+    queryset = UserProfile.objects.all().order_by('-id')
     serializer_class = UserProfileSerializer
-    
+
 @api_view(['POST'])
 def search_user(request):
     username = request.data.get("username")
@@ -46,7 +57,7 @@ def search_user(request):
 @api_view(['POST'])
 def search_user_by_email(request):
     email = request.data.get("email")
-    
+
     if User.objects.filter(email=email).exists():
         user = User.objects.get(email=email)
         data = {**UserSerializer(user).data}

@@ -1,0 +1,53 @@
+
+{% extends 'webui/base.html' %}
+{% load static %}
+{% block title %}
+Редактирование профиля
+{% endblock %}
+
+{% block content %}
+
+  {% comment %} <form method="post">
+    {% csrf_token %}
+    Текущее имя:  {{request.session.username}}
+    {{ form.as_p }}
+    <button type="submit">Сменить</button>
+  </form> {% endcomment %}
+  
+
+  <div class="background container h-100">
+		<div class="d-flex justify-content-center h-100">
+			<div class="user_card">
+				<div class="d-flex justify-content-center">
+					<h3 id="form-title">Настройки</h3>
+				</div>
+				<div class="d-flex justify-content-center form_container">
+					<form method="post">
+						{% csrf_token %}
+                        {{ form.non_field.errors }}
+						{% for field in form %}
+							<div class="input-group mb-2">
+								<div class="input-group-append">
+									<span class="input-group-text"><i class="fas fa-user"></i></span>
+								</div>
+								{% if field.errors %}
+									<div class="aler alert-danger">
+										{{ field.errors }}
+									</div>
+								{% endif %}
+								{{ field }}
+							</div>
+						{% endfor%}
+				   		<div class="d-flex justify-content-center mt-3 login_container">
+				 			<input class="btn login_btn" type="submit" value="Изменить">
+				   		</div>
+					</form>
+				</div>
+				{% for message in messages %}
+					<p class="messages">{{message}}</p>
+				{% endfor %}
+				{{form.errors}}
+			</div>
+		</div>
+	</div>
+{% endblock %}

@@ -11,6 +11,10 @@ requests = "*"
 Django = ">=2.1"
 Pillow = "*"
 psycopg2-binary = "*"
+python-json-logger = "*"
+python-telegram-handler = "*"
+pyyaml = "*"
+sentry-sdk = "==0.10.2"
 
 [requires]
 python_version = "3.7"

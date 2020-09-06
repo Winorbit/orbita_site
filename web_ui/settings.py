@@ -1,12 +1,28 @@
 import os
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+import yaml
+import logging
+import logging.config
+from pythonjsonlogger import jsonlogger
+
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
+
+with open('logger_config.yml', 'r') as f:
+            config = yaml.safe_load(f.read())
+logging.config.dictConfig(config)
+
+logger = logging.getLogger('ui_logger')
+
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 SECRET_KEY = 'ozjvkcp2(tg)bzgahcuq^xm+5f&0j-e9$5uwc+$zmm$%t-8d!+'
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','0.0.0.0',"31.131.28.206", "webapi","webapi:8000"]
+ALLOWED_HOSTS = ['127.0.0.1','0.0.0.0',"31.131.28.206", "web-api",  "sentry_onpremise_nginx_1"]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -88,12 +104,32 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'deployment', 'collected_static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'deploy_static')
 
 # MEDIA_URL = "/media/"
 # MEDIA_ROOT = os.path.join(BASE_DIR, "deployment", "media")
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
+    os.path.join(BASE_DIR, 'static'),
 ]
 
+
+env_name = os.getenv('COMPOSE_PROJECT_NAME')
+
+if env_name == 'rel':
+    #Sentry-online
+    sentry_sdk.init(
+        dsn="https://c78be8b64ec64fed8e941e73857c9f45@o430757.ingest.sentry.io/5379863",
+        integrations=[DjangoIntegration()],
+        send_default_pii=True
+    )
+else:
+    #Sentry-local
+    sentry_sdk.init(
+        dsn=os.getenv('DSN_SENTRY'),
+        integrations=[DjangoIntegration()],
+
+        # If you wish to associate users to errors (assuming you are using
+        # django.contrib.auth) you may enable sending PII data.
+        send_default_pii=True
+    )

@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
     
+{% extends 'webui/base.html' %}
+
 {% block title %}Регистрация{% endblock %}
 
 {% block content %}
@@ -60,10 +62,10 @@
 
 		//Query All input fields
 		var form_fields = document.getElementsByTagName('input')
-		form_fields[2].placeholder='Имя...';
-		form_fields[3].placeholder='Мыло...';
-		form_fields[4].placeholder='Пароль...';
-		form_fields[5].placeholder='Повтори пароль...';
+		form_fields[1].placeholder='Имя...';
+		form_fields[2].placeholder='Мыло...';
+		form_fields[3].placeholder='Пароль...';
+		form_fields[4].placeholder='Повтори пароль...';
 
 
 		for (var field in form_fields){	
