@@ -7,40 +7,29 @@ services:
             - ${PORT_API}:${PORT_API}
         command: gunicorn --reload -w 4  -b :${PORT_API} --env DJANGO_SETTINGS_MODULE=settings wsgi
         env_file:
-            - .env
-        command: gunicorn --reload -w 4  -b :${PORT_API} wsgi
-        volumes: 
-            - ./web_api/api_logfile.log:/home/web_api/api_logfile.log
-        env_file:
-            - .env
-
+            - release.env
+            
     web-ui:
         build: ./web_ui
         restart: always
-        expose:
-            - ${PORT_UI}
+        ports:
+            - ${PORT_UI}:${PORT_UI}
         command: gunicorn --reload -w 4  -b :${PORT_UI} --env DJANGO_SETTINGS_MODULE=settings wsgi
-        command: bash -c "gunicorn --reload -w 4 -b :${PORT_UI} --env DJANGO_SETTINGS_MODULE=settings wsgi"
-        volumes: 
-            - ./web_ui/deploy_static/:/home/web_ui/deploy_static/
-            - ./web_ui/ui_logfile.log:/home/web_ui/ui_logfile.log
-        env_file:
-            - .env
         depends_on:
             - web-api
+        env_file:
+            - release.env
+
     nginx:
         image: nginx:alpine
         restart: always
         volumes: 
             - ./nginx/nginx.conf.template:/nginx.conf.template
             - ./nginx/logs/:/var/log/nginx
-            - ./web_ui/deploy_static/:/staticfiles
         ports:
             - ${PORT_NGINX}:80
         environment: 
             - PORT_UI
         command: /bin/sh -c "envsubst '$$PORT_UI' < /nginx.conf.template > /etc/nginx/conf.d/default.conf && exec nginx -g 'daemon off;'"
-        env_file:
-            - .env
         depends_on:
             - web-ui

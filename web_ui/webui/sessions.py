@@ -6,7 +6,6 @@ def write_into_session(request, **kwargs):
     user_courses = kwargs.get('user_courses')
 
     request.session["username"] = user_name
-    request.session["user_id"] = user_id
-    
+    request.session["user_id"] = int(user_id)
     request.session["user_courses"] = user_courses
     request.session.modified = True

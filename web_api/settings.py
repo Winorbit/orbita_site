@@ -1,28 +1,25 @@
 import os
-
-import yaml
-import logging
+import psycopg2
 import logging.config
 from pythonjsonlogger import jsonlogger
+import yaml
 
-import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+SECRET_KEY=os.environ["SECRET_KEY"]
 
-with open('logger_config.yml', 'r') as f:
+ALLOWED_HOSTS = ["localhost",'31.131.28.206', 'web-api', '127.0.0.1', '0.0.0.0']
+
+DEBUG = os.environ["DEBUG"]
+
+# with open(f'{BASE_DIR}/logger_config.yml', 'r') as f:
+with open(f'{BASE_DIR}/web_api/logger_config.yml', 'r') as f:
             config = yaml.safe_load(f.read())
+
 logging.config.dictConfig(config)
 
-logger = logging.getLogger('ui_logger')
+logger = logging.getLogger('api_logger')
 
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-SECRET_KEY = 'ozjvkcp2(tg)bzgahcuq^xm+5f&0j-e9$5uwc+$zmm$%t-8d!+'
-
-DEBUG = True
-
-ALLOWED_HOSTS = ['127.0.0.1','0.0.0.0',"31.131.28.206", "web-api",  "sentry_onpremise_nginx_1"]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -31,15 +28,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'webui',
+    'api',
+    'rest_framework',
+    'drf_yasg',
 ]
-
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'winorbita@gmail.com'
-EMAIL_HOST_PASSWORD = '+sh52!fiv'
-DEFAULT_MAIL_NAME = "winorbita"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -56,7 +48,7 @@ ROOT_URLCONF = 'urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -69,14 +61,19 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ["DB_NAME"],
+        'USER' : os.environ["DB_USER"], 
+        'PASSWORD' : os.environ["DB_PASS"], 
+        'HOST' : os.environ["DB_HOST"],
+        'PORT' : os.environ["DB_PORT"],
+    },
 }
+
+WSGI_APPLICATION = 'wsgi.application'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -93,7 +90,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LANGUAGE_CODE = 'ru-ru'
+LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Europe/Moscow'
 
@@ -106,30 +103,13 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'deploy_static')
 
-# MEDIA_URL = "/media/"
-# MEDIA_ROOT = os.path.join(BASE_DIR, "deployment", "media")
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS':'rest_framework.pagination.PageNumberPagination',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'PAGE_SIZE': 10
+}
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
-
-
-env_name = os.getenv('COMPOSE_PROJECT_NAME')
-
-if env_name == 'rel':
-    #Sentry-online
-    sentry_sdk.init(
-        dsn="https://c78be8b64ec64fed8e941e73857c9f45@o430757.ingest.sentry.io/5379863",
-        integrations=[DjangoIntegration()],
-        send_default_pii=True
-    )
-else:
-    #Sentry-local
-    sentry_sdk.init(
-        dsn=os.getenv('DSN_SENTRY'),
-        integrations=[DjangoIntegration()],
-
-        # If you wish to associate users to errors (assuming you are using
-        # django.contrib.auth) you may enable sending PII data.
-        send_default_pii=True
-    )
+AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend')
