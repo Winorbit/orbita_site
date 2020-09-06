@@ -5,7 +5,9 @@ services:
         restart: always
         ports:
             - ${PORT_API}:${PORT_API}
-        command: gunicorn --reload -w 4  -b :${PORT_API} --env DJANGO_SETTINGS_MODULE=settings.${COMPOSE_PROJECT_NAME} wsgi
+        command: gunicorn --reload -w 4  -b :${PORT_API} --env DJANGO_SETTINGS_MODULE=settings wsgi
+        env_file:
+            - dev.env
             
     web-ui:
         build: ./web_ui
@@ -13,10 +15,10 @@ services:
         ports:
             - ${PORT_UI}:${PORT_UI}
         command: gunicorn --reload -w 4  -b :${PORT_UI} --env DJANGO_SETTINGS_MODULE=settings wsgi
-        env_file:
-        - .env
         depends_on:
             - web-api
+        env_file:
+            - dev.env
 
     nginx:
         image: nginx:alpine

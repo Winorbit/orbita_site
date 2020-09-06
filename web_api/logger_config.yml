@@ -27,7 +27,7 @@ handlers:
         level: DEBUG
         formatter: simple
 
-    loggers:
-        api_logger:
-            level: DEBUG
-            handlers: [telegram, file_handler, console]
+loggers:
+    api_logger:
+        level: DEBUG
+        handlers: [telegram, file_handler, console]

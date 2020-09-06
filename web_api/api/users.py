@@ -7,7 +7,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status, viewsets
 
-from settings.__init__ import logger
+# from settings.__init__ import logger
+from settings import logger
 
 class UserList(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('-id')
