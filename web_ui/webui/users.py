@@ -57,11 +57,12 @@ def login(request):
     if request.method == 'POST':
         form = LoginForm(data=request.POST)
         if form.is_valid():
-            check_user = requests.post(f"{CONTENT_URL}/search_user", data = form.cleaned_data)
+            check_user = requests.post(f"{CONTENT_URL}/search_userprofile", data = form.cleaned_data)
             logger.info(f'url:{CONTENT_URL}/search_user - status_code:{check_user.status_code} - put_data:{form.cleaned_data} - get_data:{check_user.json()}')
             if check_user.status_code == 200:
                 logger.info(f"User id-{check_user.json()['id']} login success")
                 write_into_session(request,**check_user.json())
+                # то ли пишеться в сессию?
                 return redirect('/my_cabinet')
             else:
                 messages.info(request, 'Чет не то вводишь, человек.')

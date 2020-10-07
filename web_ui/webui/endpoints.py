@@ -1,11 +1,9 @@
 import os
-PORT = os.environ.get('PORT_API')
-HOST = os.environ.get('API_HOST')
+# PORT = os.environ.get('PORT_API')
+PORT = "8007"
+# HOST = os.environ.get('API_HOST')
+HOST = "http://localhost"
 
-try:
-    from . local_endpoints import *
-except ImportError:
-    pass
 
 CONTENT_URL = f"{HOST}:{PORT}"
 COURSES_ENDPOINT = f'{CONTENT_URL}/courses'
