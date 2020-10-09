@@ -15,6 +15,7 @@ python-json-logger = "*"
 python-telegram-handler = "*"
 pyyaml = "*"
 sentry-sdk = "==0.10.2"
+python-dotenv = "*"
 
 [requires]
 python_version = "3.7"
