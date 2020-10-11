@@ -40,20 +40,6 @@ class UserProfileClass(viewsets.ModelViewSet):
     serializer_class = UserProfileSerializer
 
 @api_view(['POST'])
-def search_user(request):
-    username = request.data.get("username")
-    password = request.data.get("password")
-    
-    if User.objects.filter(password=password, username=username).exists():
-        user = User.objects.get(password=password, username=username)
-        user_profile = UserProfile.objects.get(user=user)
-        data = {**UserSerializer(user).data, **UserProfileSerializer(user_profile).data}
-
-        return Response(data, status=status.HTTP_200_OK)
-    else:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-@api_view(['POST'])
 def search_userprofile(request):
     if request.data:
         req = request.data.dict()
@@ -76,10 +62,6 @@ def search_userprofile(request):
 
     logger.error("Request with empty body")
     return Response("Request with empty body", status=status.HTTP_400_BAD_REQUEST)
-
-
-
-
 
 
 @api_view(['POST'])

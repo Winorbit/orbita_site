@@ -14,7 +14,14 @@ A RequestFactory allows you to test you views in a very isolated manner. You can
 
 That said, both types of tests are useful. To get a general feeling if your API works as expected I would probably start using the APIClient and use RequestFactories when it comes to more complex views. But the right mix depends a lot on your concrete application.
 
-
+- Лучше разделить на два репозиторию я деплоить абсолютно отдельно
+- Написать монолит? Оно как-то быстрее и проще. Нужно посчитать что придеться сделать
+- Фронтенд? На Бутстрапе или звать верстальщиа?  Верстальщика звать надо, наверное.
+- Не, бро, давай так - нормально делаешь микросервисник.
+- Мержишь в мастер.
+- не держать коллектстатик в гитхабе а собирать при развертыванию
+- Один источник данных - энвфайл
+- Автодобавление тэгов по дате коммита
 
 - Упростить подключение настроек для разных энвов
 - Добавить к БД таймауты

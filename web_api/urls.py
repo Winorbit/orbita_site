@@ -17,7 +17,6 @@ router.register(r'users_profiles', users.UserProfileClass)
 
 urlpatterns = [
    re_path(r'^', include(router.urls)),
-   path('search_user', users.search_user),
    path('search_userprofile', users.search_userprofile),
    path('search_user_by_email', users.search_user_by_email),
 

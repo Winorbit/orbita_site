@@ -15,5 +15,3 @@ COPY . /home/web_ui/
 RUN chmod +x /home/web_ui/entrypoint.sh
 
 ENTRYPOINT [ "/home/web_ui/entrypoint.sh" ]
-
-EXPOSE 8001

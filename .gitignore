@@ -4,7 +4,7 @@ logs/
 deployment/
 db.sqlite3
 local_endpoints.py
-
+TODO.md
 # Byte-compiled / optimized / DLL files
 elk/
 sentry/

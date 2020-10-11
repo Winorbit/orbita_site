@@ -10,7 +10,7 @@ from sentry_sdk.integrations.django import DjangoIntegration
 
 from dotenv import load_dotenv
 
-def load_envfile(envfile:str="../.env"):
+def load_envfile(envfile:str=".env"):
     dotenv_path = os.path.join(os.path.dirname(__file__), envfile)
     if os.path.exists(dotenv_path):
         load_dotenv(dotenv_path)

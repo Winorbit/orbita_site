@@ -13,9 +13,7 @@ def load_envfile(envfile:str=".env"):
     else:
         raise Exception("Envfile doesn't exist")
 
-
 load_envfile()
-
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -25,7 +23,6 @@ if os.environ.get("ENV_TYPE") != "prod":
     ALLOWED_HOSTS = ["*"]
 else:
     ALLOWED_HOSTS = ['31.131.28.206', 'web-api']
-
 
 DEBUG = os.environ.get("DEBUG")
 
@@ -116,6 +113,7 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
+
 STATIC_ROOT = os.path.join(BASE_DIR, 'deploy_static')
 
 REST_FRAMEWORK = {
