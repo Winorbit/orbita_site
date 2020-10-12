@@ -35,9 +35,11 @@ class UserList(viewsets.ModelViewSet):
             logger.error(f"NEW USER WAS NOT CREATED - SOME EMPTY INPUT FIELDS: {request.data}")
             return Response(status=status.HTTP_412_PRECONDITION_FAILED)
         
+
 class UserProfileClass(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all().order_by('-id')
     serializer_class = UserProfileSerializer
+
 
 @api_view(['POST'])
 def search_userprofile(request):
