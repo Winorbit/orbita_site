@@ -14,9 +14,9 @@ from .endpoints import *
 from .sessions import *
 
 def index(request):
-
-    req = requests.get("http://0.0.0.0:8007")
     return render(request, "webui/info/index.html")
+# перенести в urls 
+
 
 def session_user_info(request):
     if request.session.get("username") and request.session.get("user_id"):
@@ -27,6 +27,7 @@ def session_user_info(request):
     else:
         return None
         pass
+
 
 def signup(request):
     form = SignUpForm()

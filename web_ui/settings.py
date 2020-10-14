@@ -1,5 +1,4 @@
 import os
-
 import yaml
 import logging
 import logging.config
@@ -18,17 +17,13 @@ def load_envfile(envfile:str=".env"):
     else:
         raise Exception("Envfile doesn't exist")
 
-
 load_envfile()
-
-
 
 with open('logger_config.yml', 'r') as f:
             config = yaml.safe_load(f.read())
 logging.config.dictConfig(config)
 
 logger = logging.getLogger('ui_logger')
-
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -41,7 +36,6 @@ else:
 
 DEBUG = os.environ.get("DEBUG")
 
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -51,13 +45,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'webui',
 ]
-
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'winorbita@gmail.com'
-EMAIL_HOST_PASSWORD = '+sh52!fiv'
-DEFAULT_MAIL_NAME = "winorbita"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
