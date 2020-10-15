@@ -5,12 +5,7 @@ services:
         restart: always
         ports:
             - ${PORT_API}:${PORT_API}
-        command: gunicorn --reload -w 4  -b :${PORT_API} --env DJANGO_SETTINGS_MODULE=settings wsgi
-        env_file:
-            - .env
         command: gunicorn --reload -w 4  -b :${PORT_API} wsgi
-        volumes: 
-            - ./web_api/api_logfile.log:/home/web_api/api_logfile.log
         env_file:
             - .env
 
@@ -19,15 +14,14 @@ services:
         restart: always
         expose:
             - ${PORT_UI}
-        command: gunicorn --reload -w 4  -b :${PORT_UI} --env DJANGO_SETTINGS_MODULE=settings wsgi
-        command: bash -c "gunicorn --reload -w 4 -b :${PORT_UI} --env DJANGO_SETTINGS_MODULE=settings wsgi"
+        command: bash -c "gunicorn --reload -w 4  -b :${PORT_UI} --env DJANGO_SETTINGS_MODULE=settings wsgi"
         volumes: 
             - ./web_ui/deploy_static/:/home/web_ui/deploy_static/
-            - ./web_ui/ui_logfile.log:/home/web_ui/ui_logfile.log
         env_file:
             - .env
         depends_on:
             - web-api
+
     nginx:
         image: nginx:alpine
         restart: always

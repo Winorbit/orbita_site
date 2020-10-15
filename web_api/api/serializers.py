@@ -21,6 +21,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
    class Meta:
         model = User
-        fields = '__all__'
+        fields = ("email","id","username","is_superuser","password")
 
 

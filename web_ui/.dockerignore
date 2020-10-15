@@ -1,2 +1,4 @@
 Dockerfile
+webui/tests
+webui/requirements.txt
 webui/local_endpoints.py

@@ -4,13 +4,12 @@ logs/
 deployment/
 db.sqlite3
 local_endpoints.py
-
+TODO.md
 # Byte-compiled / optimized / DLL files
 elk/
 sentry/
 sen/
 sentry-variables.env
-
 web_api/api_logfile.log
 web_ui/ui_logfile.log
 web_ui/.env

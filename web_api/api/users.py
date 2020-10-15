@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-
+from api.validation import check_email
 from api.models import Course, UserProfile
 from api.serializers import UserSerializer, UserProfileSerializer
 
@@ -7,7 +7,6 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status, viewsets
 
-# from settings.__init__ import logger
 from settings import logger
 
 class UserList(viewsets.ModelViewSet):
@@ -36,23 +35,36 @@ class UserList(viewsets.ModelViewSet):
             logger.error(f"NEW USER WAS NOT CREATED - SOME EMPTY INPUT FIELDS: {request.data}")
             return Response(status=status.HTTP_412_PRECONDITION_FAILED)
         
+
 class UserProfileClass(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all().order_by('-id')
     serializer_class = UserProfileSerializer
 
-@api_view(['POST'])
-def search_user(request):
-    username = request.data.get("username")
-    password = request.data.get("password")
-    
-    if User.objects.filter(password=password, username=username).exists():
-        user = User.objects.get(password=password, username=username)
-        user_profile = UserProfile.objects.get(user=user)
-        data = {**UserSerializer(user).data, **UserProfileSerializer(user_profile).data}
 
-        return Response(data, status=status.HTTP_200_OK)
-    else:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+@api_view(['POST'])
+def search_userprofile(request):
+    if request.data:
+        req = request.data.dict()
+        if req.get("password"):
+            if req.get("username") or req.get("email"):
+                if check_email(req.get("username")):
+                    req["email"] = req["username"]
+                    del req["username"]
+                if User.objects.filter(**req).exists():
+                    user = User.objects.get(**req)
+                    user_profile = UserProfile.objects.get(user=user)
+                    data = {**UserSerializer(user).data, **UserProfileSerializer(user_profile).data}
+                    return Response(data, status=status.HTTP_200_OK)
+                else:
+                    logger.error(f"User {req} was not found")
+                    return Response(f"User {req.data} was not found", status=status.HTTP_404_NOT_FOUND)
+        else:
+            logger.error(f"Unauthorized, request without password: {req} ")
+            return Response(f"Unauthorized, request without password, req: {req} ", status=status.HTTP_401_UNAUTHORIZED)
+
+    logger.error("Request with empty body")
+    return Response("Request with empty body", status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['POST'])
 def search_user_by_email(request):

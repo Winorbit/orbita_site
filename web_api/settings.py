@@ -3,16 +3,29 @@ import psycopg2
 import logging.config
 from pythonjsonlogger import jsonlogger
 import yaml
+from dotenv import load_dotenv
+
+def load_envfile(envfile:str=".env"):
+    dotenv_path = os.path.join(os.path.dirname(__file__), ".env")
+    if os.path.exists(dotenv_path):
+        load_dotenv(dotenv_path)
+        return os.environ
+    else:
+        raise Exception("Envfile doesn't exist")
+
+load_envfile()
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY=os.environ["SECRET_KEY"]
+SECRET_KEY=os.environ.get("SECRET_KEY")
 
-ALLOWED_HOSTS = ["localhost",'31.131.28.206', 'web-api', '127.0.0.1', '0.0.0.0']
+if os.environ.get("ENV_TYPE") != "prod":
+    ALLOWED_HOSTS = ["*"]
+else:
+    ALLOWED_HOSTS = ['31.131.28.206', 'web-api']
 
-DEBUG = os.environ["DEBUG"]
+DEBUG = os.environ.get("DEBUG")
 
-# with open(f'{BASE_DIR}/logger_config.yml', 'r') as f:
 with open(f'{BASE_DIR}/web_api/logger_config.yml', 'r') as f:
             config = yaml.safe_load(f.read())
 
@@ -30,7 +43,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'api',
     'rest_framework',
-    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -65,11 +77,11 @@ TEMPLATES = [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ["DB_NAME"],
-        'USER' : os.environ["DB_USER"], 
-        'PASSWORD' : os.environ["DB_PASS"], 
-        'HOST' : os.environ["DB_HOST"],
-        'PORT' : os.environ["DB_PORT"],
+        'NAME': os.environ.get("DB_NAME"),
+        'USER' : os.environ.get("DB_USER"), 
+        'PASSWORD' : os.environ.get("DB_PASS"), 
+        'HOST' : os.environ.get("DB_HOST"),
+        'PORT' : os.environ.get("DB_PORT"),
     },
 }
 
@@ -101,6 +113,7 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
+
 STATIC_ROOT = os.path.join(BASE_DIR, 'deploy_static')
 
 REST_FRAMEWORK = {

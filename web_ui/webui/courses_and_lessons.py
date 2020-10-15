@@ -1,15 +1,14 @@
+import json
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
-import json
 
 from .forms import SignUpForm, LoginForm
 from .import users
 from . import endpoints
 from . import sessions
+from settings import logger
 
 import requests
-
-from settings import logger
 
 
 OK_CODES = (200, 201, 202, 203, 204, 205, 206)
@@ -21,7 +20,7 @@ def courses(request):
 
     if res.status_code in OK_CODES:
         courses_data = res.json()['results']
-        # logger.info(f'url:{endpoints.COURSES_ENDPOINT} - username:{user["username"]} - status_code:{res.status_code} - res:{res.json()}')
+        logger.info(f'url:{endpoints.COURSES_ENDPOINT} - username:{user["username"]} - status_code:{res.status_code} - res:{res.json()}')
         return render(request, "webui/courses_and_lessons/courses.html",{'courses':courses_data, "user":user})
     else:
         logger.warning(f"url:{endpoints.COURSES_ENDPOINT} - get_data:{res.json()}")
@@ -87,7 +86,6 @@ def single_course(request, id):
         else:
             logger.warning("Not found in request user and user_courses")
             raise Exception("Not found in request user and user_courses")
-
 
     if request.method == 'GET':
         if users.session_user_info(request):

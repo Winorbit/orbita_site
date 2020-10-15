@@ -1,5 +1,4 @@
 import os
-
 import yaml
 import logging
 import logging.config
@@ -8,6 +7,17 @@ from pythonjsonlogger import jsonlogger
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
+from dotenv import load_dotenv
+
+def load_envfile(envfile:str=".env"):
+    dotenv_path = os.path.join(os.path.dirname(__file__), envfile)
+    if os.path.exists(dotenv_path):
+        load_dotenv(dotenv_path)
+        return os.environ
+    else:
+        raise Exception("Envfile doesn't exist")
+
+load_envfile()
 
 with open('logger_config.yml', 'r') as f:
             config = yaml.safe_load(f.read())
@@ -15,14 +25,16 @@ logging.config.dictConfig(config)
 
 logger = logging.getLogger('ui_logger')
 
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-SECRET_KEY = 'ozjvkcp2(tg)bzgahcuq^xm+5f&0j-e9$5uwc+$zmm$%t-8d!+'
+SECRET_KEY=os.environ.get("SECRET_KEY")
 
-DEBUG = True
+if os.environ.get("ENV_TYPE") != "prod":
+    ALLOWED_HOSTS = ["*"]
+else:
+    ALLOWED_HOSTS = ['31.131.28.206', 'web-api']
 
-ALLOWED_HOSTS = ['127.0.0.1','0.0.0.0',"31.131.28.206", "web-api",  "sentry_onpremise_nginx_1"]
+DEBUG = os.environ.get("DEBUG")
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -33,13 +45,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'webui',
 ]
-
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'winorbita@gmail.com'
-EMAIL_HOST_PASSWORD = '+sh52!fiv'
-DEFAULT_MAIL_NAME = "winorbita"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -105,9 +110,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'deploy_static')
-
-# MEDIA_URL = "/media/"
-# MEDIA_ROOT = os.path.join(BASE_DIR, "deployment", "media")
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
