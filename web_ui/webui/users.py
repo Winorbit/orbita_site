@@ -58,7 +58,7 @@ def login(request):
         form = LoginForm(data=request.POST)
         if form.is_valid():
             check_user = requests.post(f"{CONTENT_URL}/search_userprofile", data = form.cleaned_data)
-            logger.info(f'url:{CONTENT_URL}/search_user - status_code:{check_user.status_code} - put_data:{form.cleaned_data} - get_data:{check_user.json()}')
+            logger.info(f'url:{CONTENT_URL}/search_userprofile - status_code:{check_user.status_code} - put_data:{form.cleaned_data} - get_data:{check_user.json()}')
             if check_user.status_code == 200:
                 logger.info(f"User id-{check_user.json()['id']} login success")
                 write_into_session(request,**check_user.json())
