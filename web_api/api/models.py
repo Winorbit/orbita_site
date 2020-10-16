@@ -13,7 +13,6 @@ class BaseTextModel(models.Model):
     pass
 
 class Course(BaseTextModel):
-    course_type = models.CharField(max_length = 20, choices=COURSES_TYPE, db_index=True, default = COURSES_TYPE[0], verbose_name='course type - free or premium')
     pass
 
 class Lesson(BaseTextModel):
